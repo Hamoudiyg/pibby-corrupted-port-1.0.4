@@ -1,0 +1,24 @@
+I am porting a complete Friday Night Funkin' mod (Pibby Corrupted) from Psych Engine 0.6.3 to Psych Engine 1.0.4. I have provided the entire mod folder containing shaders (.frag), Lua/HScript control scripts (in scripts/ and data/), custom events, custom note types, song charts/data, and character JSON files.
+
+Please analyze and update all necessary files to make the mod 100% functional on Psych Engine 1.0.4 under these strict rules:
+
+1. SHADERS (.frag):
+   - Do NOT change the core GLSL math or visual logic. Keep all glitch effects, color shifting, and visual animations 100% identical to the 0.6.3 version.
+   - Ensure `#pragma header` is correctly placed and use `flixel_texture2D` where necessary to preserve alpha transparency and prevent black screen rendering issues.
+
+2. SCRIPTS & LUA MANAGEMENT (scripts/):
+   - Update all shader binding calls (such as in shaders.lua) to modern 1.0.4 syntax using `openfl.filters.ShaderFilter` for both `camGame` and `camHUD`.
+   - Completely discard `zCameraFix.lua` or any obsolete matrix-manipulation camera scripts to prevent crashes, relying instead on 1.0.4 native camera handling.
+   - Update any global hooks (like `opponentNoteHit` or `onEvent`) to modern 1.0.4 syntax while maintaining exact mechanics (health drains, intensity triggers, etc.).
+
+3. CHARTS & SONG DATA (songs/ & data/):
+   - Preserve all original JSON charts, note timings, and event placements exactly as they are without corruption.
+
+4. CUSTOM EVENTS & NOTE TYPES (custom_events/ & custom_notetypes/):
+   - Ensure all custom event hooks and note behaviors work smoothly under Psych Engine 1.0.4.
+
+5. CHARACTER DATA (characters/):
+   - Update character JSON configuration files to be fully compatible with Psych Engine 1.0.4.
+   - Keep all animation names, offsets, scale, health icons, and camera positions 100% identical so characters look and behave exactly like they did in 0.6.3.
+
+Provide clean, updated, and ready-to-use code for each modified file with clear instructions on where to place them in the Psych Engine 1.0.4 directory structure.
