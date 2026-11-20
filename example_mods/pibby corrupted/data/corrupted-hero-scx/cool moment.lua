@@ -1,7 +1,9 @@
 function onStepHit()
     if curStep == 1024 then
-        setObjectCamera('boyfriend', 'hud')
-        setObjectCamera('dad', 'hud')
+        -- تحديث 1.0.4: setObjectCamera -> setProperty
+        setProperty('boyfriend.camera', instanceArg('camHUD'), false, true)
+        setProperty('dad.camera', instanceArg('camHUD'), false, true)
+        
         setProperty('boyfriend.alpha', 0)
         setProperty('boyfriend.x', 1050)
         setProperty('boyfriend.y', 250)
@@ -17,8 +19,10 @@ function onStepHit()
         setProperty("boyfriend.colorTransform.color", 0xffffff)
         setProperty("dad.colorTransform.color", 0xffffff)
         setProperty("gf.colorTransform.color", 0xffffff)
-        setObjectOrder('boyfriendGroup',1)
-        setObjectOrder('dadGroup',2)
+        
+        -- تحديث 1.0.4: استخدام zIndex بدلاً من setObjectOrder
+        setProperty('boyfriendGroup.zIndex', 1)
+        setProperty('dadGroup.zIndex', 2)
 
         setProperty('GBG.visible',false)
 
@@ -45,8 +49,10 @@ function onStepHit()
         setProperty('dad.y', 550)
 
     elseif curStep == 1280 then
-        setObjectCamera('boyfriend', 'game')
-        setObjectCamera('dad', 'game')
+        -- تحديث 1.0.4
+        setProperty('boyfriend.camera', instanceArg('camGame'), false, true)
+        setProperty('dad.camera', instanceArg('camGame'), false, true)
+        
         setProperty('dad.velocity.y', 0)
         setProperty('boyfriend.velocity.y', 0)
 
@@ -58,8 +64,9 @@ function onStepHit()
 
         setProperty('gf.visible',true)
 
-        setObjectOrder('boyfriendGroup',5)
-        setObjectOrder('dadGroup',6)
+        -- تحديث 1.0.4: استخدام zIndex بدلاً من setObjectOrder
+        setProperty('boyfriendGroup.zIndex', 5)
+        setProperty('dadGroup.zIndex', 6)
 
     end
 end

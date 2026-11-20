@@ -4,6 +4,8 @@ function onCreate()
     end
 end
 
-function opponentNoteHit()
-    addHealth((getHealth() > 0.1 and -0.012))
+function opponentNoteHit(membersIndex, noteData, noteType, isSustainNote)
+    if getHealth() > 0.1 then
+        addHealth(-0.012)
+    end
 end

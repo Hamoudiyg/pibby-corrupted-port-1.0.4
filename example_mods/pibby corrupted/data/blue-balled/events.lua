@@ -7,10 +7,10 @@ function onCreatePost()
     setProperty('camGame.visible',false)
     setProperty('camHUD.visible',false)
 
-    setObjectCamera('UpperBar', 'other')
-    setObjectCamera('LowerBar', 'other')
+    -- تحديث 1.0.4: setObjectCamera لم يعد يعمل، نستخدم setProperty
+    setProperty('UpperBar.camera', instanceArg('camOther'), false, true)
+    setProperty('LowerBar.camera', instanceArg('camOther'), false, true)
 end
-
 
 local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'timeBar', 'timeBarBG', 'timeTxt'}
 function onEvent(n,v1,v2)
@@ -25,22 +25,21 @@ function onEvent(n,v1,v2)
     if n == 'hud' then
         for i = 1,#hideHud do
             if v1 == '1' then
-            setProperty(hideHud[i]..'.visible', false)
+                setProperty(hideHud[i]..'.visible', false)
             else
-            setProperty(hideHud[i]..'.visible', true)
+                setProperty(hideHud[i]..'.visible', true)
             end
         end
     end
 
     if n == 'GBG' then
         if v1 == 'on' then
-            
+
         else
-            
+
         end
     end
 end
-
 
 folowcam = true
 camX = 600
@@ -52,7 +51,6 @@ function onUpdate()
     end
 end
 
-
 function onStepHit()
     if curStep == 1 then
         setProperty('camGame.visible', true)
@@ -62,14 +60,13 @@ function onStepHit()
         runTimer('coolOpp',0.01)
     elseif curStep == 128 then
         setProperty('camHUD.visible', true)
-        setObjectCamera('UpperBar', 'hud')
-        setObjectCamera('LowerBar', 'hud')
+        -- تحديث 1.0.4
+        setProperty('UpperBar.camera', instanceArg('camHUD'), false, true)
+        setProperty('LowerBar.camera', instanceArg('camHUD'), false, true)
         camX = 700
         camY = 500
-
     end
 end
-
 
 function onMoveCamera(focus)
     if curStep < 128 then

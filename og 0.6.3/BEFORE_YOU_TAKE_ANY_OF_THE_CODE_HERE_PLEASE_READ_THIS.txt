@@ -1,0 +1,19 @@
+don't use any of the lua code here in the mod
+
+the only script that you can use is:
+
+scripts/zCameraFix
+scripts/tween
+custom_notetypes/3rd Player
+custom_notetypes/Bothchr
+custom_notetypes/PibbySing
+custom_events/Kabounce
+custom_events/Dadbattle Spotlight Recreation
+and all the frags files
+
+
+although you can use all the scripts if you're going to make a fan charts for Pibby Corrupted AND ONLY FAN CHARTS
+
+if i see my code used on anyone's mod i WILL take it down, if you really want to use them, go to my dms (discord is latter__) and ask for permission
+
+--latter

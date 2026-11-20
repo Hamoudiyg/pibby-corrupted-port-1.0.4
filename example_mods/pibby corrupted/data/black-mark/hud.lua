@@ -16,12 +16,9 @@ function onCreatePost()
     screenCenter('healthBar','y')
 end
 
-
 function onUpdatePost()
     setProperty('iconP1.y',getProperty('healthBar.percent') * -4.808 + 580.8)
-
     setProperty('iconP2.y',getProperty('healthBar.percent') * -4.808 + 480.8)
-
 
     setProperty('iconP1.x',0)
     setProperty('iconP2.x',0)

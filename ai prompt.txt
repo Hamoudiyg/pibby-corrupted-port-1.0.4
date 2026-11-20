@@ -22,3 +22,46 @@ Please analyze and update all necessary files to make the mod 100% functional on
    - Keep all animation names, offsets, scale, health icons, and camera positions 100% identical so characters look and behave exactly like they did in 0.6.3.
 
 Provide clean, updated, and ready-to-use code for each modified file with clear instructions on where to place them in the Psych Engine 1.0.4 directory structure.
+
+وتكلم معي بالعربية
+
+الصيغة zip غير مدعومة
+
+سارسل الملفات بشكل منفرد وانت برمج ووصل الملفات
+
+
+I am porting and updating a complete **Friday Night Funkin'** mod (**Pibby Corrupted**) from **Psych Engine 0.6.3** to **Psych Engine 1.0.4**, targeting **Haxe 4.3.7** (the active Haxe version used for building) with full compatibility for **Windows**, **Android**, and cloud CI/CD builds such as **GitHub Actions**.
+
+### Context, Engine, Mods & Why We Are Doing This
+- **Engine & Mod Scope:** We are migrating a full FNF mod (*Pibby Corrupted*, involving mod assets, custom mechanics, shaders, scripts, events, note types, charts, and character data) from an older **Psych Engine 0.6.3** codebase to **Psych Engine 1.0.4** compiled with **Haxe 4.3.7**.
+- **Why We Are Doing This:** Older 0.6.3 scripts, shader calls, and legacy camera/script assumptions often break, crash, or behave inconsistently on Psych Engine 1.0.4 and Haxe 4.3.7—especially across both desktop (**Windows**) and mobile (**Android**) targets built via automated workflows like GitHub Actions. Our goal is to make the mod run cleanly and reliably on 1.0.4 while preserving the exact original 0.6.3 experience, visuals, and mod mechanics.
+
+### Strict Anti-Hallucination & Fidelity Rules (DO NOT Improvise)
+- **Do NOT invent, add, or fabricate** any extra code, mechanics, features, uniforms, variables, or logic that are not present in the original files or strictly required for Psych Engine 1.0.4 + Haxe 4.3.7 compatibility.
+- **Do NOT remove, omit, or "simplify" away** original code, properties, or data under the guise of cleanup unless it directly causes incompatibility or crashes on Psych Engine 1.0.4 / Haxe 4.3.7.
+- **Preserve 100% of original values and behavior:** Keep all damage/health values, effect intensities, timings, delays, names, file paths, and configurations identical to the original mod.
+
+### File-Specific Porting Rules
+
+1. **Shaders (`.frag`):**
+   - Do NOT alter the core GLSL math or visual logic. Keep all glitch effects, color shifting, and visual animations 100% identical to the 0.6.3 version.
+   - Ensure `#pragma header` is properly placed and use `flixel_texture2D` where needed to preserve alpha transparency (`alpha`), prevent black screens, and avoid GLSL/OpenFL compilation issues under Psych Engine 1.0.4 and Haxe 4.3.7.
+
+2. **Scripts & Lua/HScript Management (`scripts/` and `data/`):**
+   - Update shader binding calls (such as in `shaders.lua`) to modern Psych Engine 1.0.4 syntax compatible with Haxe 4.3.7 using `openfl.filters.ShaderFilter` for both `camGame` and `camHUD`, preserving original shader names and parameters.
+   - Completely discard or ignore `zCameraFix.lua` and any obsolete matrix-manipulation camera scripts that cause crashes, relying instead on Psych Engine 1.0.4's native camera handling.
+   - Update global hooks (such as `opponentNoteHit` or `onEvent`) to 1.0.4 syntax while keeping exact original mechanics (health drain, intensity triggers, etc.).
+
+3. **Charts & Song Data (`songs/` and `data/`):**
+   - Keep all original JSON charts, note timings, and event placements untouched without corruption or alteration.
+
+4. **Custom Events & Note Types (`custom_events/` and `custom_notetypes/`):**
+   - Ensure custom event hooks and note behaviors work smoothly under Psych Engine 1.0.4 and Haxe 4.3.7 without changing their intended mechanics.
+
+5. **Character Data (`characters/`):**
+   - Update character JSON files for Psych Engine 1.0.4 compatibility while keeping animation names, offsets, scale, health icons, and camera positions 100% identical to 0.6.3.
+
+### Required Output Format
+- Always communicate with me in **Arabic**.
+- Provide the complete, clean, copy-ready code for each updated file, specify its exact target path inside the Psych Engine 1.0.4 mod directory structure, and list only the necessary compatibility changes made.
+- I will send files individually or in small batches—process each file accurately without adding unrequested extras.

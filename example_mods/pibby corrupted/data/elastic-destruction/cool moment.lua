@@ -1,6 +1,5 @@
 function onStepHit()
     if curStep == 1020 then
-
         setProperty('gf.alpha', 0)
         setProperty('boyfriend.alpha', 0)
         setProperty('dad.alpha', 0)
@@ -18,20 +17,20 @@ function onStepHit()
         setProperty("gf.colorTransform.color", 0xffffff)
 
     elseif curStep == 1024 then
-        setObjectCamera('dad', 'hud')
+        setProperty('dad.camera', instanceArg('camHUD'), false, true)
         doTweenAlpha('1', 'dad', 1, 2, 'sineInOut')
         doTweenAlpha('2', 'camGame', 1, 2, 'sineInOut')
 
     elseif curStep == 1084 then
         setProperty('boyfriend.velocity.x', -55)
-        setObjectCamera('boyfriend', 'hud')
+        setProperty('boyfriend.camera', instanceArg('camHUD'), false, true)
         doTweenAlpha('1', 'dad', 0, 1, 'sineInOut')
 
     elseif curStep == 1088 then
         doTweenAlpha('2', 'boyfriend', 1, 1, 'sineInOut')
 
     elseif curStep == 1105 then
-        setObjectCamera('dad', 'game')
+        setProperty('dad.camera', instanceArg('camGame'), false, true)
 
     elseif curStep == 1148 then
         doTweenAlpha('1', 'boyfriend', 0, 0.5, 'sineInOut')
@@ -40,7 +39,7 @@ function onStepHit()
     elseif curStep == 1153 then
         setProperty('dad.velocity.x', 0)
         setProperty('boyfriend.velocity.x', 0)
-        setObjectCamera('boyfriend', 'game')
+        setProperty('boyfriend.camera', instanceArg('camGame'), false, true)
         setProperty('boyfriend.x', defaultBoyfriendX + 100)
         setProperty('boyfriend.y', defaultBoyfriendY + 350)
 

@@ -14,15 +14,17 @@ function onCreate()
     makeGraphic('flashbla',screenWidth+4,screenHeight+4,'ffffff')
     addLuaSprite('flashbla', true);
     setBlendMode('flashbla', 'SUBTRACT')
-    setObjectCamera('flashbla', 'other')
+    -- تحديث 1.0.4: setObjectCamera لم يعد يعمل، نستخدم الخاصية camera
+    setProperty('flashbla.camera', instanceArg('camOther'), false, true)
 
     for i = 1,2 do
-    makeAnimatedLuaSprite('FuckMP4_'..i, 'FuckMP4 '..i)
-    addAnimationByPrefix('FuckMP4_'..i,'Play', 'Play', 10,false);
-    scaleObject('FuckMP4_'..i,1.15,1.15)
-    screenCenter('FuckMP4_'..i, 'xy')
-    setObjectCamera('FuckMP4_'..i,'other')
-    addLuaSprite('FuckMP4_'..i,true)
+        makeAnimatedLuaSprite('FuckMP4_'..i, 'FuckMP4 '..i)
+        addAnimationByPrefix('FuckMP4_'..i,'Play', 'Play', 10,false);
+        scaleObject('FuckMP4_'..i,1.15,1.15)
+        screenCenter('FuckMP4_'..i, 'xy')
+        -- تحديث 1.0.4
+        setProperty('FuckMP4_'..i..'.camera', instanceArg('camOther'), false, true)
+        addLuaSprite('FuckMP4_'..i,true)
     end
 end
 
@@ -43,7 +45,6 @@ function onSongStart()
     playAnim('FuckMP4_1','Play',true)
 end
 
-
 local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'timeBar', 'timeBarBG', 'timeTxt', 'boat', 'barrel', 'candle'}
 function onEvent(n,v1,v2)
     if n == 'camera_target' then
@@ -57,9 +58,9 @@ function onEvent(n,v1,v2)
     if n == 'hud' then
         for i = 1,#hideHud do
             if v1 == '1' then
-            setProperty(hideHud[i]..'.visible', false)
+                setProperty(hideHud[i]..'.visible', false)
             else
-            setProperty(hideHud[i]..'.visible', true)
+                setProperty(hideHud[i]..'.visible', true)
             end
         end
     end
@@ -67,13 +68,11 @@ function onEvent(n,v1,v2)
     if n == 'GBG' then
         if v1 == 'on' then
             triggerEvent('hud','1')
-            else
+        else
             triggerEvent('hud',0)
-
         end
     end
 end
-
 
 folowcam = false
 camX = 1560
@@ -88,37 +87,28 @@ end
 function onStepHit()
     if curStep == 10 then
         playAnim('FuckMP4_1','Play',true)
-
     elseif curStep == 14 then
         playAnim('FuckMP4_1','Play',true)
         setProperty('FuckMP4_1.visible',true)
-
     elseif curStep == 94 then
         playAnim('FuckMP4_2','Play',true)
         setProperty('FuckMP4_2.visible',true)
         removeLuaSprite('FuckMP4_1',true)
-
     elseif curStep >= 168 and curStep <= 175 then
         playAnim('FuckMP4_2','Play',true,false,getRandomInt(58,60))
-
     elseif curStep == 176 then
         doTweenAlpha('osne','FuckMP4_2',0,3.5)
         playAnim('FuckMP4_2','Play',true,false,55)
-
     elseif curStep == 191 then
         playAnim('FuckMP4_2','Play',true,false,55)
-
     elseif curStep == 240 then
         removeLuaSprite('FuckMP4_2',true)
-
     elseif curStep == 352 then
         setProperty('camHUD.alpha', 1)
         setProperty('boyfriend.alpha',1)
         setProperty('gf.alpha',1)
-
     elseif curStep == 480 then
         beat = 1
-
     elseif curStep == 608 then
         beat = 0
         for i = 1,#hideHud do
@@ -130,11 +120,9 @@ function onStepHit()
         playAnim('markanim','dialogue',true)
         setProperty('dad.visible',false)
         setProperty('markanim.visible',true)
-
     elseif curStep == 664 then
         doTweenAlpha('cam1','camGame',0,0.3)
         doTweenAlpha('cam2','camHUD',0,0.3)
-
     elseif curStep == 672 then
         setProperty('boyfriend.alpha',1)
         setProperty('dad.visible',true)
@@ -154,7 +142,6 @@ function onStepHit()
         folowcam = false
         camX = 1400
         camY = 800
-
     elseif curStep == 1005 then
         beat = 0
     elseif curStep == 1022 then
@@ -171,10 +158,8 @@ function onStepHit()
         setProperty('boat.visible',true)
         setProperty('candle.visible',true)
         setProperty('barrel.visible',true)
-
     end
 end
-
 
 beat = 0
 function onBeatHit()

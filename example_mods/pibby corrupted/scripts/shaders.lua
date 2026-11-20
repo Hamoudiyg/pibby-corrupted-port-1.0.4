@@ -1,35 +1,36 @@
 function onCreatePost()
-makeLuaSprite("Shader1")
-setSpriteShader("Shader1", "Glitchy")
+    makeLuaSprite("Shader1")
+    setSpriteShader("Shader1", "Glitchy")
 
-makeLuaSprite("Shader2")
-setSpriteShader("Shader2", "shift glitch")
+    makeLuaSprite("Shader2")
+    setSpriteShader("Shader2", "shift glitch")
 
-runHaxeCode([[
-trace(ShaderFilter);
-game.camGame.setFilters([new ShaderFilter(game.getLuaObject("Shader1").shader),new ShaderFilter(game.getLuaObject("Shader2").shader)]);
+    runHaxeCode([[
+        var filter1 = new ShaderFilter(game.getLuaObject("Shader1").shader);
+        var filter2 = new ShaderFilter(game.getLuaObject("Shader2").shader);
 
-game.camHUD.setFilters([new ShaderFilter(game.getLuaObject("Shader1").shader),new ShaderFilter(game.getLuaObject("Shader2").shader)]);
-		]])
+        game.camGame.filters = [filter1, filter2];
+        game.camHUD.filters = [filter1, filter2];
+    ]])
 
-setShaderFloat("Shader1", "AMT", 0)
-setShaderFloat("Shader1", "SPEED", 0)
+    setShaderFloat("Shader1", "AMT", 0)
+    setShaderFloat("Shader1", "SPEED", 0)
 
-setShaderFloat("Shader2", "offsetIntensity", 0)
-setShaderFloat("Shader2", "noiseQuality",100)
+    setShaderFloat("Shader2", "offsetIntensity", 0)
+    setShaderFloat("Shader2", "noiseQuality", 100)
 end
-
 
 amount = 0
 glit = 0
-function onUpdatePost()
-setShaderFloat("Shader2", "noiseIntensity", glit)
-setShaderFloat("Shader2", "colorR", glit * getRandomInt (-40,40))
-setShaderFloat("Shader2", "colorB", glit * getRandomInt (-40,40))
-setShaderFloat("Shader2", "colorG", glit * getRandomInt (-40,40))
 
-setShaderFloat("Shader2", "iTime", os.clock())
-setShaderFloat("Shader1", "iTime", os.clock())
+function onUpdatePost(elapsed)
+    setShaderFloat("Shader2", "noiseIntensity", glit)
+    setShaderFloat("Shader2", "colorR", glit * getRandomInt(-40, 40))
+    setShaderFloat("Shader2", "colorB", glit * getRandomInt(-40, 40))
+    setShaderFloat("Shader2", "colorG", glit * getRandomInt(-40, 40))
+
+    setShaderFloat("Shader2", "iTime", os.clock())
+    setShaderFloat("Shader1", "iTime", os.clock())
 end
 
 function opponentNoteHit(id, direction, noteType, isSustainNote)
@@ -44,22 +45,22 @@ function opponentNoteHit(id, direction, noteType, isSustainNote)
     end
 end
 
-function onTimerCompleted(t)
-if t == 'remove' then
-setShaderFloat("Shader1", "AMT", 0)
-setShaderFloat("Shader1", "SPEED", 0)
+function onTimerCompleted(t, loops, loopsLeft)
+    if t == 'remove' then
+        setShaderFloat("Shader1", "AMT", 0)
+        setShaderFloat("Shader1", "SPEED", 0)
+    end
 end
-end
-
 
 function boundTo(value, min, max)
-return math.max(min, math.min(max, value))
-end
-function math.lerp(from,to,i)
-return from+(to-from)*i
+    return math.max(min, math.min(max, value))
 end
 
+function math.lerp(from, to, i)
+    return from + (to - from) * i
+end
 
 function onUpdate(elapsed)
-glit = math.lerp(glit, 0, boundTo(elapsed * 10, 0, 500));
+    glit = math.lerp(glit, 0, boundTo(elapsed * 10, 0, 500))
 end
+```[cite: 22]

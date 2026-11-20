@@ -23,7 +23,6 @@ function onCreatePost()
     setProperty('jakeanim2.visible', false)
 end
 
-
 function onEvent(n,v1,v2)
     if n == 'camera_target' then
         if v1 == 'all' then
@@ -58,7 +57,6 @@ function onUpdate()
     end
 end
 
-
 function onStepHit()
     if curStep == 1 then
         setProperty("dad.colorTransform.color", 0xffffff)
@@ -78,13 +76,13 @@ function onStepHit()
 
     elseif curStep == 496 then
         setProperty('camHUD.alpha', 0)
-        setObjectCamera('UpperBar', 'other')
-        setObjectCamera('LowerBar', 'other')
+        setProperty('UpperBar.camera', instanceArg('camOther'), false, true)
+        setProperty('LowerBar.camera', instanceArg('camOther'), false, true)
 
     elseif curStep == 512 then
         setProperty('camHUD.alpha', 1)
-        setObjectCamera('UpperBar', 'hud')
-        setObjectCamera('LowerBar', 'hud')
+        setProperty('UpperBar.camera', instanceArg('camHUD'), false, true)
+        setProperty('LowerBar.camera', instanceArg('camHUD'), false, true)
 
     elseif curStep == 1291 or curStep == 2379 then
         doTweenAlpha('1', 'camGame', 0, 1, 'expoOut')
@@ -144,7 +142,6 @@ function onStepHit()
         doTweenAlpha('odh', 'camHUD', 0, 0.3,'expoOut')
     end
 end
-
 
 invert = false
 function onTimerCompleted(t)
