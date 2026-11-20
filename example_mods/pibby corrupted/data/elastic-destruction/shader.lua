@@ -1,23 +1,17 @@
 function onCreatePost()
-    -- Shader3 (old film)
-    makeLuaSprite("Shader3")
-    setSpriteShader("Shader3", "old film")
-
-    -- Shader1 (Glitchy) - يُستخدم لاحقاً في curStep 127
+    -- الشادر الأول
     makeLuaSprite("Shader1")
     setSpriteShader("Shader1", "Glitchy")
 
-    -- Shader2 (shift glitch) - يُستخدم لاحقاً في curStep 127
+    -- الشادر الثاني
     makeLuaSprite("Shader2")
     setSpriteShader("Shader2", "shift glitch")
 
-    -- ربط الشادرات بالكاميرا باستخدام الطريقة الصحيحة في 1.0.4
-    runHaxeCode([[
-        var shaderName3 = "old film";
-        game.initLuaShader(shaderName3);
-        var shader3 = game.createRuntimeShader(shaderName3);
-        game.getLuaObject("Shader3").shader = shader3;
+    -- الشادر الثالث
+    makeLuaSprite("Shader3")
+    setSpriteShader("Shader3", "old film")
 
+    runHaxeCode([[
         var shaderName1 = "Glitchy";
         game.initLuaShader(shaderName1);
         var shader1 = game.createRuntimeShader(shaderName1);
@@ -28,14 +22,30 @@ function onCreatePost()
         var shader2 = game.createRuntimeShader(shaderName2);
         game.getLuaObject("Shader2").shader = shader2;
 
-        game.camGame.setFilters([new openfl.filters.ShaderFilter(shader3)]);
+        var shaderName3 = "old film";
+        game.initLuaShader(shaderName3);
+        var shader3 = game.createRuntimeShader(shaderName3);
+        game.getLuaObject("Shader3").shader = shader3;
+
+        game.camGame.setFilters([
+            new openfl.filters.ShaderFilter(shader1),
+            new openfl.filters.ShaderFilter(shader2),
+            new openfl.filters.ShaderFilter(shader3)
+        ]);
     ]])
+    
+    -- القيم الابتدائية
+    setShaderFloat("Shader1", "AMT", 0)
+    setShaderFloat("Shader1", "SPEED", 0)
+    setShaderFloat("Shader2", "offsetIntensity", 0)
+    setShaderFloat("Shader2", "noiseQuality", 100)
 end
 
 function onUpdatePost()
-    if curStep > 1 and curStep < 127 then
-        setShaderFloat("Shader3", "iTime", os.clock())
-    end
+    -- تحديث الوقت لكل الشادرات لمنع تجمد الشاشة أو تمططها
+    setShaderFloat("Shader1", "iTime", os.clock())
+    setShaderFloat("Shader2", "iTime", os.clock())
+    setShaderFloat("Shader3", "iTime", os.clock())
 
     if curStep == 127 then
         runHaxeCode([[

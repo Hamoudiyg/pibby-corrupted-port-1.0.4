@@ -25,7 +25,10 @@ function onCreatePost()
 end
 
 function onUpdatePost(elapsed)
-    if keyJustPressed('space') and cooldown == false and getProperty('camGame.alpha') == 1 and getProperty('camHUD.alpha') == 1 and getProperty('healthBar.alpha') == 1 and getProperty('camGame.visible') == true and getProperty('camHUD.visible') == true and getProperty('healthBar.visible') == true then
+    -- تحديث الشرط: استخدام > 0.5 بدلاً من == 1 لتجنب مشاكل الكسور العشرية
+    -- إزالة شرط healthBar.alpha لأنه قد يكون شفافاً في بعض الأغاني
+    if keyJustPressed('space') and cooldown == false and getProperty('camGame.alpha') > 0.5 and getProperty('camHUD.alpha') > 0.5 and getProperty('camGame.visible') == true and getProperty('camHUD.visible') == true then
+        
         runTimer('hideText', 3)
         if bullets > 0 then
             if dadName ~= 'SU/shield-steven' then
@@ -40,8 +43,11 @@ function onUpdatePost(elapsed)
             end
 
             cooldown = true
+            -- تصحيح: استخدام cancelTimer بدلاً من cancelTween
+            cancelTimer('hideText')
             cancelTween('hideText')
             setProperty('bullet_counter.alpha', 1)
+            
             if dadName ~= 'FNF/corrupted-gf' then
                 triggerEvent('Play Animation', 'attack', 'bf')
                 playSound('shoot', 1)
@@ -67,6 +73,8 @@ i can't...
                 triggerEvent('Play Animation', 'singRIGHTmiss', 'bf')
                 playSound('gunclick', 1)
                 cooldown = true
+                -- تصحيح: استخدام cancelTimer بدلاً من cancelTween
+                cancelTimer('hideText')
                 cancelTween('hideText')
                 setProperty('bullet_counter.alpha', 1)
                 setTextString('bullet_counter',

@@ -1,6 +1,6 @@
 function onCreate()
-    precacheSound('slice')-- cool precache
-    for i = 0, getProperty('unspawnNotes.length')-1 do-- general note stuff no one gives a fuck
+    precacheSound('slice')
+    for i = 0, getProperty('unspawnNotes.length')-1 do
         if getPropertyFromGroup('unspawnNotes', i, 'noteType') == 'Sword Note' then
             setPropertyFromGroup('unspawnNotes', i, 'texture', 'Sword');
             setPropertyFromGroup('unspawnNotes', i, 'noMissAnimation', true);
@@ -16,13 +16,11 @@ function onCreate()
     setProperty('finn_attack.offset.y', 144)
 end
 
-function onCreatePost()--new finn assets for the attack anim only, to replace it with the actual finn
+function onCreatePost()
     setProperty('finn_attack.visible', false)
-
     setProperty('finn_attack.x', getProperty((dadName == 'AT/finn' and 'dad' or gfName == 'AT/finn' and 'gf')..'.x'))
     setProperty('finn_attack.y', getProperty((dadName == 'AT/finn' and 'dad' or gfName == 'AT/finn' and 'gf')..'.y'))
 
-    -- تحديث 1.0.4: setObjectOrder -> zIndex
     setProperty('gfGroup.zIndex', 11)
     setProperty('boyfriendGroup.zIndex', 12)
     setProperty('finn_attack.zIndex', 13)
@@ -32,13 +30,15 @@ end
 function goodNoteHit(id, direction, noteType)
     if noteType == 'Sword Note' then
         playAnim('finn_attack', 'attack', true)
-        setProperty('finn_attack.visible', true)--show fake finn
+        setProperty('finn_attack.visible', true)
         triggerEvent('Play Animation', 'dodge', 'bf')
-
         setProperty((dadName == 'AT/finn' and 'dad' or gfName == 'AT/finn' and 'gf')..'.visible', false)
-
         playSound('slice', 0.2)
-        runTimer('endanim', 0.48)-- timer to replace fake with real finn
+        
+        -- إصلاح: إلغاء المؤقت السابق لمنع تداخل الاختفاء
+        cancelTimer('endanim')
+        runTimer('endanim', 0.48)
+        
         triggerEvent('Screen Shake', '0.1,0.03', '0.1,0.03')
     end
 end
@@ -54,7 +54,6 @@ function onEvent(n,v1,v2)
 end
 
 function resetColor(spr)
-    -- تحديث 1.0.4: إعادة تعيين القيم الفردية بدلاً من nil
     for _, col in ipairs({'red', 'green', 'blue'}) do
         setProperty(spr .. ".colorTransform." .. col .. "Offset", 0)
         setProperty(spr .. ".colorTransform." .. col .. "Multiplier", 1)
@@ -62,19 +61,20 @@ function resetColor(spr)
     local oa = getProperty(spr..".alpha")
     setProperty(spr..".alpha", 0)
     setProperty(spr..".alpha", oa)
-end-- again,ne_eo is the GOAT
+end
 
-function noteMiss(id, direction, noteType)-- the same one above but now you get damage lol
+function noteMiss(id, direction, noteType)
     if noteType == 'Sword Note' then
         playAnim('finn_attack', 'attack', true)
         setProperty('finn_attack.visible', true)
         setProperty((dadName == 'AT/finn' and 'dad' or gfName == 'AT/finn' and 'gf')..'.visible', false)
-
         triggerEvent('Play Animation','hit','bf')
-
         playSound('slice', 0.2)
+        
+        cancelTimer('endanim')
         runTimer('endanim', 0.48)
         runTimer('endanimbf', 0.42)
+        
         triggerEvent('Screen Shake', '0.1,0.03', '0.1,0.03')
         setProperty('health', getProperty('health') - 0.3)
     end
