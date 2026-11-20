@@ -12,7 +12,8 @@ end
 
 function onCreatePost()
     makeAnimatedLuaSprite('count', 'intro')
-    setObjectCamera('count', 'other')
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('count.camera', instanceArg('camOther'), false, true)
     addAnimationByPrefix('count', 'Ready', 'Ready', 24, false)
     addAnimationByPrefix('count', 'Set', 'Set', 24, false)
     addAnimationByPrefix('count', 'Go', 'Go', 24, false)

@@ -6,11 +6,24 @@ function onCreatePost()
     setSpriteShader("Shader2", "shift glitch")
 
     runHaxeCode([[
-        var filter1 = new ShaderFilter(game.getLuaObject("Shader1").shader);
-        var filter2 = new ShaderFilter(game.getLuaObject("Shader2").shader);
+        var shaderName1 = "Glitchy";
+        game.initLuaShader(shaderName1);
+        var shader1 = game.createRuntimeShader(shaderName1);
+        game.getLuaObject("Shader1").shader = shader1;
 
-        game.camGame.filters = [filter1, filter2];
-        game.camHUD.filters = [filter1, filter2];
+        var shaderName2 = "shift glitch";
+        game.initLuaShader(shaderName2);
+        var shader2 = game.createRuntimeShader(shaderName2);
+        game.getLuaObject("Shader2").shader = shader2;
+
+        game.camGame.setFilters([
+            new openfl.filters.ShaderFilter(shader1),
+            new openfl.filters.ShaderFilter(shader2)
+        ]);
+        game.camHUD.setFilters([
+            new openfl.filters.ShaderFilter(shader1),
+            new openfl.filters.ShaderFilter(shader2)
+        ]);
     ]])
 
     setShaderFloat("Shader1", "AMT", 0)
@@ -63,4 +76,3 @@ end
 function onUpdate(elapsed)
     glit = math.lerp(glit, 0, boundTo(elapsed * 10, 0, 500))
 end
-```[cite: 22]
