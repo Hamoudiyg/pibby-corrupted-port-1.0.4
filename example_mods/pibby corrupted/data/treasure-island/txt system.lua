@@ -1,21 +1,21 @@
 function onCreatePost()
-makeLuaText('translation', '    word "rap"', 1000,0, (downscroll and 200 or 500))
-screenCenter('translation', 'x')
-setTextSize('translation',33)
-setObjectCamera('translation','hud')
-setProperty('translation.visible',false)
-addLuaText('translation',true)
+    makeLuaText('translation', '    word "rap"', 1000,0, (downscroll and 200 or 500))
+    screenCenter('translation', 'x')
+    setTextSize('translation',33)
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('translation.camera', instanceArg('camHUD'), false, true)
+    setProperty('translation.visible',false)
+    addLuaText('translation',true)
 
-makeLuaText('translationColo', 'THE           ', 1000,0, (downscroll and 200 or 500))
-screenCenter('translationColo', 'x')
-setTextSize('translationColo',33)
-setObjectCamera('translationColo','hud')
-setTextColor('translationColo', 'fff907')
-setProperty('translationColo.visible',false)
-addLuaText('translationColo',true)
+    makeLuaText('translationColo', 'THE           ', 1000,0, (downscroll and 200 or 500))
+    screenCenter('translationColo', 'x')
+    setTextSize('translationColo',33)
+    -- تحديث 1.0.4
+    setProperty('translationColo.camera', instanceArg('camHUD'), false, true)
+    setTextColor('translationColo', 'fff907')
+    setProperty('translationColo.visible',false)
+    addLuaText('translationColo',true)
 end
-
-
 
 function onStepHit()
     if curStep == 1156 then
@@ -27,7 +27,6 @@ function onStepHit()
     elseif curStep == 1161 then
         setTextString('translation', 'the word      ')
         setTextString('translationColo', '         "RAP"')
-
     elseif curStep == 1165 then
         setTextString('translation', '    the word "death"')
         setTextString('translationColo', 'AND                 ')
@@ -58,6 +57,5 @@ function onStepHit()
     elseif curStep == 1216 then
         removeLuaText('translation',true)
         removeLuaText('translationColo',true)
-
     end
 end

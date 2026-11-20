@@ -2,59 +2,58 @@ function onCreate()
     makeLuaSprite("black",nil)
     makeGraphic("black", screenWidth * 1.3, screenHeight * 1.3, '000000')
     addLuaSprite("black")
-    setObjectCamera("black", 'other')
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty("black.camera", instanceArg("camOther"), false, true)
 end
 
 function onCreatePost()
     setProperty("black.alpha", 0)
 
-if not downscroll then
-ypos = {
-    20,
-    40,
-    50,
-    55,
-    55,
-    50,
-    40,
-    20
-}
+    if not downscroll then
+        ypos = {
+            20,
+            40,
+            50,
+            55,
+            55,
+            50,
+            40,
+            20
+        }
 
-ypos2 = {
-    55,
-    50,
-    40,
-    20,
-    20,
-    40,
-    50,
-    55
-}
-else
-ypos = {
-    540,
-    560,
-    570,
-    575,
-    575,
-    570,
-    560,
-    540
-}
+        ypos2 = {
+            55,
+            50,
+            40,
+            20,
+            20,
+            40,
+            50,
+            55
+        }
+    else
+        ypos = {
+            540,
+            560,
+            570,
+            575,
+            575,
+            570,
+            560,
+            540
+        }
 
-ypos2 = {
-    575,
-    570,
-    560,
-    540,
-    540,
-    560,
-    570,
-    575
-}
-
-
-end
+        ypos2 = {
+            575,
+            570,
+            560,
+            540,
+            540,
+            560,
+            570,
+            575
+        }
+    end
 end
 
 local modchart = false
@@ -69,7 +68,8 @@ function onStepHit()
 
     if curStep == 256 then
         setProperty("cameraSpeed", 3)
-        setObjectCamera("black", 'hud')
+        -- تحديث 1.0.4: setObjectCamera -> setProperty
+        setProperty("black.camera", instanceArg("camHUD"), false, true)
         modchart = true
     end
 
@@ -95,7 +95,8 @@ function onStepHit()
     end
 
     if curStep == 1024 then
-        setObjectOrder("black", 0)
+        -- تحديث 1.0.4: setObjectOrder -> zIndex
+        setProperty("black.zIndex", 0)
         doTweenAlpha("you stupid ni-", "black", 0, 0.35, "circOut")
         doTweenAlpha("subtitle thing", "subtitleTxt", 0, 0.35, "circOut")
 
@@ -116,7 +117,6 @@ function allnoteTweenY(tag, value, duration, ease)
         noteTweenY(tag .. i, i, value, duration, ease)
     end
 end
-
 
 local modchartnumber = 0
 
@@ -150,9 +150,6 @@ function onBeatHit()
     end
 end
 
----
---- @param tag string
----
 function onTweenCompleted(tag, vars)
     if tag == 'wrhwrhw17' then
         allnoteTweenY("whrar", defaultOpponentStrumY0, crochet / 1000, "circOut")

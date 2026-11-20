@@ -13,7 +13,6 @@ function onCreatePost()
     setProperty('Steven_block.y', getProperty('dad.y'))
 end
 
-
 function onStepHit()
     if curStep == 607 then
         removeLuaSprite('Steven_block',true)

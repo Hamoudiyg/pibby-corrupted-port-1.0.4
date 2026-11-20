@@ -3,7 +3,6 @@ function onCreatePost()
     setProperty('camHUD.alpha',0)
 end
 
-
 function onEvent(n,v1,v2)
     if n == 'camera_target' then
         if v1 == 'all' then
@@ -13,27 +12,27 @@ function onEvent(n,v1,v2)
         end
     end
 
-
-
     if n == 'GBG' then
         if v1 == 'on' then
-        setProperty("dad.colorTransform.color", 0xffffff)
-        setProperty("gf.colorTransform.color", 0xffffff)
-        setProperty("pibby.colorTransform.color", 0xcdcdcd)
+            setProperty("dad.colorTransform.color", 0xffffff)
+            setProperty("gf.colorTransform.color", 0xffffff)
+            setProperty("pibby.colorTransform.color", 0xcdcdcd)
             for i = 1,10 do
                 setProperty('bg'..i..'.visible', false)
             end
         else
-        setProperty("pibby.colorTransform", nil)
-        setProperty('pibby.alpha',0)
-        setProperty('pibby.alpha',1)
+            -- تحديث 1.0.4: إعادة تعيين colorTransform الفردية بدلاً من nil
+            for _, col in ipairs({'red', 'green', 'blue'}) do
+                setProperty('pibby.colorTransform.' .. col .. 'Offset', 0)
+                setProperty('pibby.colorTransform.' .. col .. 'Multiplier', 1)
+            end
+            setProperty('pibby.alpha',0)
+            setProperty('pibby.alpha',1)
             for i = 1,10 do
                 setProperty('bg'..i..'.visible', true)
             end
         end
     end
-
-
 end
 
 folowcam = false
@@ -50,15 +49,12 @@ function onUpdate()
     end
 end
 
-
-
 function onStepHit()
     if curStep == 32 then
         doTweenAlpha('1','countdown',0,1.6)
     elseif curStep == 48 then
         doTweenAlpha('2','camGame',1,1.6)
         doTweenAlpha('3','camHUD',1,1.6)
-
     elseif curStep == 1536 then
         doTweenAlpha('1','camGame',0,1.6)
         doTweenAlpha('2','camHUD',0,1.6)
@@ -73,7 +69,6 @@ function onStepHit()
         setProperty('pibby.visible',true)
     end
 end
-
 
 function onUpdatePost()
     setProperty('gf.y', getProperty('bg6.y') + 630)

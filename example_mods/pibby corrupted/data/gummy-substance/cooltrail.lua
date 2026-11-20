@@ -29,16 +29,11 @@ end
 end
 end
 
-
-
 function onCreate()
 runTimer('coale', speed, 0)
-
 end
 
-
 i = 1
-
 
 function onTimerCompleted(tag)
 if tag == 'coale' then
@@ -47,7 +42,6 @@ i = i + 1
 if i >= 100 then
 i = 0
 end
-
 
 tagn = ('jojo_reference'..i)
 tagn2 = ('jojo_reference2'..i)
@@ -64,12 +58,10 @@ setProperty(tagn..'.scale.x', getProperty('dad.scale.x'))
 setProperty(tagn..'.scale.y', getProperty('dad.scale.y'))
 addLuaSprite(tagn, true)
 
-
 setProperty(tagn..'.colorTransform.redOffset', getProperty('dad.colorTransform.redOffset'))
 setProperty(tagn..'.colorTransform.greenOffset', getProperty('dad.colorTransform.greenOffset'))
 setProperty(tagn..'.colorTransform.blueOffset', getProperty('dad.colorTransform.blueOffset'))
 end
-
 
 if char == 'bf' or char == 'bfdad' then
 makeAnimatedLuaSprite(tagn2, getProperty('boyfriend.imageFile'), getProperty('boyfriend.x'), getProperty('boyfriend.y'))
@@ -89,8 +81,6 @@ setProperty(tagn2..'.colorTransform.redOffset', getProperty('boyfriend.colorTran
 setProperty(tagn2..'.colorTransform.greenOffset', getProperty('boyfriend.colorTransform.greenOffset'))
 setProperty(tagn2..'.colorTransform.blueOffset', getProperty('boyfriend.colorTransform.blueOffset'))
 end
-
-
 end
 end
 end

@@ -1,7 +1,8 @@
 function onCreate()
    for i = 1,8 do
         makeLuaSprite('M'..i, 'memorys/M'..i,-200);
-        setObjectCamera('M'..i, 'hud')
+        -- تحديث 1.0.4: setObjectCamera -> setProperty
+        setProperty('M'..i..'.camera', instanceArg('camHUD'), false, true)
         scaleObject('M'..i,1.2,1.2)
         addLuaSprite('M'..i)
     end
@@ -12,7 +13,6 @@ function onCreatePost()
         setProperty('M'..i..'.alpha',0)
     end
 end
-
 
 function onStepHit()
     if curStep == 640 then

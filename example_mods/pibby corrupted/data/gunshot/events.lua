@@ -18,7 +18,6 @@ function onCreatePost()
     end
 end
 
-
 function onStepHit()
     if curStep == 1 then
         setProperty('camGame.alpha', 1)
@@ -63,8 +62,6 @@ function onStepHit()
     end
 end
 
-
-
 function onEvent(n,v1)
     if n == 'camera_target' then
         if v1 == 'all' then
@@ -75,8 +72,6 @@ function onEvent(n,v1)
         end
     end
 end
-
-
 
 folowcam = true
 camX = 400

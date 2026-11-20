@@ -2,22 +2,26 @@ function onCreatePost()
     makeLuaSprite('iconP3', 'icons/icon-pibgirlfriend', 0,0)
 
     setProperty('iconP3.y', getProperty('iconP1.y') - 50)
-    setObjectCamera('iconP3', 'hud')
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('iconP3.camera', instanceArg('camHUD'), false, true)
     addLuaSprite('iconP3', false)
 
     setProperty("iconP3._frame.frame.y", 0)
     setProperty("iconP3._frame.frame.width", 150)
     setProperty("iconP3._frame.frame.height", 150)
     setProperty('iconP3.alpha', 0)
-    setObjectOrder('iconP3', getObjectOrder('iconP2') - 1)
+    -- تحديث 1.0.4: setObjectOrder -> zIndex
+    setProperty('iconP3.zIndex', getProperty('iconP2.zIndex') - 1)
 
 
     makeLuaSprite('helthBar2', nil, getProperty('healthBar.x'),getProperty('healthBar.y'))
     makeGraphic('helthBar2', getProperty('healthBar.width'),getProperty('healthBar.height') / 1.7, 'a5004d')
-    setObjectCamera('helthBar2', 'hud')
+    -- تحديث 1.0.4
+    setProperty('helthBar2.camera', instanceArg('camHUD'), false, true)
     setProperty('helthBar2.visible',false)
     addLuaSprite('helthBar2')
-    setObjectOrder('helthBar2', getObjectOrder('iconP1') - 1)
+    -- تحديث 1.0.4
+    setProperty('helthBar2.zIndex', getProperty('iconP1.zIndex') - 1)
 end
 
 function onUpdatePost()

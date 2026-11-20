@@ -15,15 +15,21 @@ function opponentNoteHit(id, direction, noteType)
     end
 end
 
-
-
 function onTimerCompleted(t)
     if t == 'removeInv' then
-        setProperty("dad.colorTransform", nil)
+        -- تحديث 1.0.4: إعادة تعيين القيم الفردية بدلاً من nil
+        for _, col in ipairs({'red', 'green', 'blue'}) do
+            setProperty('dad.colorTransform.' .. col .. 'Offset', 0)
+            setProperty('dad.colorTransform.' .. col .. 'Multiplier', 1)
+        end
         setProperty("dad.alpha", 0)
         setProperty("dad.alpha", 1)
+        
         if getProperty('hand.visible') == true then
-            setProperty("hand.colorTransform", nil)
+            for _, col in ipairs({'red', 'green', 'blue'}) do
+                setProperty('hand.colorTransform.' .. col .. 'Offset', 0)
+                setProperty('hand.colorTransform.' .. col .. 'Multiplier', 1)
+            end
             setProperty("hand.alpha", 0)
             setProperty("hand.alpha", 1)
         end
@@ -35,14 +41,11 @@ function onTimerCompleted(t)
     end
 end
 
-
-
 function onCreate()
-makeAnimatedLuaSprite('bfshot', 'special_Anims/FIRE_BF')
-addAnimationByPrefix('bfshot','shot', 'shot', 24,false);
-addLuaSprite('bfshot',true)
+    makeAnimatedLuaSprite('bfshot', 'special_Anims/FIRE_BF')
+    addAnimationByPrefix('bfshot','shot', 'shot', 24,false);
+    addLuaSprite('bfshot',true)
 end
-
 
 function onCreatePost()
     setProperty('bfshot.x',getProperty('boyfriend.x') - 895)
@@ -52,7 +55,6 @@ end
 function onSongStart()
     setProperty('bfshot.visible',false)
 end
-
 
 function goodNoteHit(id, dir, noteType, isSustainNote)
     if noteType == 'Bullet' and curStep < 1152 then

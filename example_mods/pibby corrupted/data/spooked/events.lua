@@ -1,11 +1,11 @@
 function onCreate()
     setProperty('camGame.alpha', 0)
     setProperty('camHUD.alpha', 0)
-    setObjectCamera('GBG', 'hud')
-    setObjectCamera('dad', 'hud')
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('GBG.camera', instanceArg('camHUD'), false, true)
+    setProperty('dad.camera', instanceArg('camHUD'), false, true)
     setProperty('dad.x', 0)
     setProperty('dad.y', 400)
-
 
     makeAnimatedLuaSprite('kidsanim', 'special_Anims/spooky month')
     addAnimationByPrefix('kidsanim', 'dialogue', 'spooky', 24, false)
@@ -27,11 +27,12 @@ end
 local chrColor = {'red', 'green', 'blue'}
 function onStepHit()
     if curStep == 64 then
-        setObjectCamera('boyfriend', 'hud')
+        -- تحديث 1.0.4
+        setProperty('boyfriend.camera', instanceArg('camHUD'), false, true)
         setProperty('boyfriend.x', 1150)
         setProperty('boyfriend.y', 250)
         setProperty('boyfriend.velocity.x', -80)
-        setObjectCamera('dad', 'game')
+        setProperty('dad.camera', instanceArg('camGame'), false, true)
         setProperty('dad.velocity.x', 0)
         setProperty('dad.x', defaultOpponentX)
         setProperty('dad.y', defaultOpponentY)
@@ -39,8 +40,9 @@ function onStepHit()
 
     elseif curStep == 128 then
         setProperty('boyfriend.velocity.x', 0)
-        setObjectCamera('boyfriend', 'game')
-        setObjectCamera('GBG', 'game')
+        -- تحديث 1.0.4
+        setProperty('boyfriend.camera', instanceArg('camGame'), false, true)
+        setProperty('GBG.camera', instanceArg('camGame'), false, true)
         setProperty('boyfriend.x', defaultBoyfriendX + 100)
         setProperty('boyfriend.y', defaultBoyfriendY + 350)
         setProperty('camGame.alpha', 1)
@@ -96,11 +98,12 @@ function onStepHit()
     elseif curStep == 959 then
         switching = true
     elseif curStep == 960 then
-        setObjectCamera('GBG', 'hud')
+        -- تحديث 1.0.4
+        setProperty('GBG.camera', instanceArg('camHUD'), false, true)
         setProperty('halloweenBG.visible',false)
         setProperty('halloweenWhite.visible',false)
         triggerEvent('hud','1')
-        setObjectCamera('dad', 'hud')
+        setProperty('dad.camera', instanceArg('camHUD'), false, true)
         setProperty('dad.x', 0)
         setProperty('dad.y', 400)
         setProperty('dad.velocity.x', 80)
@@ -108,21 +111,23 @@ function onStepHit()
 
     elseif curStep == 1024 then
         setProperty('dad.visible', false)
-        setObjectCamera('boyfriend', 'hud')
+        -- تحديث 1.0.4
+        setProperty('boyfriend.camera', instanceArg('camHUD'), false, true)
         setProperty('boyfriend.x', 1150)
         setProperty('boyfriend.y', 250)
         setProperty('boyfriend.velocity.x', -80)
         setProperty('boyfriend.visible', true)
-        setObjectCamera('dad', 'game')
+        setProperty('dad.camera', instanceArg('camGame'), false, true)
         setProperty('dad.velocity.x', 0)
         setProperty('dad.x', defaultOpponentX)
         setProperty('dad.y', defaultOpponentY)
         switching = false
     elseif curStep == 1089 then
-        setObjectCamera('GBG', 'game')
+        -- تحديث 1.0.4
+        setProperty('GBG.camera', instanceArg('camGame'), false, true)
         setProperty('dad.visible', true)
         setProperty('boyfriend.velocity.x', 0)
-        setObjectCamera('boyfriend', 'game')
+        setProperty('boyfriend.camera', instanceArg('camGame'), false, true)
         setProperty('boyfriend.x', defaultBoyfriendX + 100)
         setProperty('boyfriend.y', defaultBoyfriendY + 350)
         setProperty('camGame.alpha', 1)
@@ -145,8 +150,6 @@ function opponentNoteHit(id, direction, noteType, isSustainNote)
     end
 end
 
-
-
 local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'timeBar', 'timeBarBG', 'timeTxt'}
 function onEvent(n,v1,v2)
     if n == 'camera_target' then
@@ -167,8 +170,6 @@ function onEvent(n,v1,v2)
         end
     end
 end
-
-
 
 folowcam = false
 camX = 700

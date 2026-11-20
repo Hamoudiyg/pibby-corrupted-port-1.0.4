@@ -10,11 +10,9 @@ function onCreate()
     setProperty('Pico_attack.offset.y', 108)
 end
 
-
-function onCreatePost()--new pico assets for the attack anim only, to replace it with the actual pico
+function onCreatePost()
     setProperty('Pico_attack.visible', false)
 end
-
 
 function onStepHit()
     if curStep == 129 then
@@ -22,7 +20,6 @@ function onStepHit()
         setProperty('Pico_attack.y',getProperty('dad.y'))
     end
 end
-
 
 cooldownOpp = false
 function onBeatHit()
@@ -43,7 +40,6 @@ function onBeatHit()
         cooldownOpp = true
     end
 end
-
 
 function onTimerCompleted(t)
     if t == 'endanim' then

@@ -2,35 +2,34 @@ function rgbToHex(array)return string.format('%.2x%.2x%.2x', array[1], array[2],
 function onCreatePost()
     makeLuaSprite('iconP3', 'icons/icon-spinel', 0,0)
     setProperty('iconP3.y', getProperty('iconP1.y') - 50)
-    setObjectCamera('iconP3', 'hud')
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('iconP3.camera', instanceArg('camHUD'), false, true)
     addLuaSprite('iconP3', false)
 
     setProperty("iconP3._frame.frame.y", 0)
     setProperty("iconP3._frame.frame.width", 150)
     setProperty("iconP3._frame.frame.height", 150)
     setProperty('iconP3.alpha', 0)
-    setObjectOrder('iconP3', getObjectOrder('iconP2') - 1)
-
+    -- تحديث 1.0.4: setObjectOrder -> zIndex
+    setProperty('iconP3.zIndex', getProperty('iconP2.zIndex') - 1)
 
     makeLuaSprite('helthBar2', nil, getProperty('healthBar.x'),getProperty('healthBar.y'))
     makeGraphic('helthBar2', getProperty('healthBar.width'),getProperty('healthBar.height') / 1.7, rgbToHex(getProperty('gf.healthColorArray')))
-    setObjectCamera('helthBar2', 'hud')
+    -- تحديث 1.0.4
+    setProperty('helthBar2.camera', instanceArg('camHUD'), false, true)
     addLuaSprite('helthBar2')
     setProperty('helthBar2.visible', false)
-    setObjectOrder('helthBar2', getObjectOrder('iconP1') - 1)
+    setProperty('helthBar2.zIndex', getProperty('iconP1.zIndex') - 1)
 end
 
 function onUpdatePost()
     if curStep > 832 then
-
         setProperty("helthBar2._frame.frame.width", (getProperty('healthBar.percent')) * -6.01 + 601)
-
         setProperty('iconP3.x', getProperty('iconP2.x') - 100)
         setProperty('iconP3.scale.x', getProperty('iconP2.scale.x'))
         setProperty('iconP3.scale.y', getProperty('iconP2.scale.y'))
         setProperty('iconP3.alpha', getProperty('iconP2.alpha'))
         setProperty('iconP3.visible', getProperty('iconP2.visible'))
-
         setProperty('helthBar2.alpha', getProperty('healthBar.alpha'))
 
         if getProperty('healthBar.percent') == 100 then

@@ -7,7 +7,8 @@ function onCreatePost()
 end
 
 function onSongStart()
-    setObjectOrder('finn_attack', getObjectOrder('JH1') - 1)
+    -- تحديث 1.0.4: setObjectOrder -> zIndex
+    setProperty('finn_attack.zIndex', getProperty('JH1.zIndex') - 1)
     setProperty('camGame.alpha', 1)
     setProperty('camHUD.alpha', 1)
     setShaderFloat("Shader1", "AMT", 0.3)
@@ -90,7 +91,11 @@ function onStepHit()
         setProperty('JH2.alpha',1)
 
     elseif curStep == 1024 then
-        setProperty("gf.colorTransform", nil)
+        -- تحديث 1.0.4: إعادة تعيين colorTransform الفردية بدلاً من nil
+        for _, col in ipairs({'red', 'green', 'blue'}) do
+            setProperty('gf.colorTransform.' .. col .. 'Offset', 0)
+            setProperty('gf.colorTransform.' .. col .. 'Multiplier', 1)
+        end
         setProperty("gf.alpha", 0)
         setProperty("gf.alpha", 1)
         setProperty('boyfriend.visible', true)

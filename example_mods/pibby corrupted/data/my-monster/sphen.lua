@@ -3,7 +3,8 @@ local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'ti
 function onCreate()
     addCharacterToList('SU/shield-steven', 'dad')
     makeLuaSprite('Vig', 'vig')
-    setObjectCamera('Vig', 'other')
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('Vig.camera', instanceArg('camOther'), false, true)
     setProperty('Vig.alpha', 0.8)
     addLuaSprite('Vig')
     setProperty('gf.visible',false)
@@ -29,20 +30,18 @@ function onCreatePost()
     setProperty('stevanim.visible',false)
 end
 
-
 function onSongStart()
     for i = 0,3 do
         noteTweenAlpha("yes"..i, i, 0, 0.01)
     end
 
-setPropertyFromGroup('strumLineNotes', 4, 'x',412)
-setPropertyFromGroup('strumLineNotes', 5, 'x',524)
-setPropertyFromGroup('strumLineNotes', 6, 'x',636)
-setPropertyFromGroup('strumLineNotes', 7, 'x',748)
+    setPropertyFromGroup('strumLineNotes', 4, 'x',412)
+    setPropertyFromGroup('strumLineNotes', 5, 'x',524)
+    setPropertyFromGroup('strumLineNotes', 6, 'x',636)
+    setPropertyFromGroup('strumLineNotes', 7, 'x',748)
 
     doTweenAlpha('sechid','camGame',1,1.33,'quadIn')
 end
-
 
 function onEvent(n,v1,v2)
     if n == 'camera_target' then
@@ -56,13 +55,12 @@ function onEvent(n,v1,v2)
     if n == 'hud' then
         for i = 1,#hideHud do
             if v1 == '1' then
-            setProperty(hideHud[i]..'.visible', false)
+                setProperty(hideHud[i]..'.visible', false)
             else
-            setProperty(hideHud[i]..'.visible', true)
+                setProperty(hideHud[i]..'.visible', true)
             end
         end
     end
-
 end
 
 function onStepHit()
@@ -88,7 +86,8 @@ function onStepHit()
     if curStep == 408 or curStep == 440 then
         setProperty('boyfriend.x', 1400)
         setProperty('boyfriend.y', 150)
-        setObjectCamera('boyfriend', 'hud')
+        -- تحديث 1.0.4
+        setProperty('boyfriend.camera', instanceArg('camHUD'), false, true)
         doTweenAlpha('1f', 'boyfriend', 1, 1,'quadOut')
         doTweenX('2f', 'boyfriend', 380, 1,'quadOut')
     end
@@ -99,7 +98,8 @@ function onStepHit()
     end
 
     if curStep == 467 then
-        setObjectCamera('boyfriend', 'game')
+        -- تحديث 1.0.4
+        setProperty('boyfriend.camera', instanceArg('camGame'), false, true)
         setProperty('boyfriend.x', defaultBoyfriendX + 100)
         setProperty('boyfriend.y', defaultBoyfriendY + 350)
         setProperty('boyfriend.alpha',1)
@@ -109,11 +109,11 @@ function onStepHit()
         doTweenAlpha('odbe','camGame',0,0.63)
     end
 
-
     if curStep == 536 or curStep == 568 then
         setProperty('dad.x', -300)
         setProperty('dad.y', 200)
-        setObjectCamera('dad', 'hud')
+        -- تحديث 1.0.4
+        setProperty('dad.camera', instanceArg('camHUD'), false, true)
         doTweenAlpha('1f', 'dad', 1, 1,'quadOut')
         doTweenX('2f', 'dad', 300, 1,'quadOut')
     end
@@ -124,7 +124,8 @@ function onStepHit()
     end
 
     if curStep == 594 then
-        setObjectCamera('dad', 'game')
+        -- تحديث 1.0.4
+        setProperty('dad.camera', instanceArg('camGame'), false, true)
         setProperty('dad.x', defaultOpponentX - 190)
         setProperty('dad.y', defaultOpponentY + 180)
         setProperty('dad.alpha',1)
@@ -197,7 +198,6 @@ function onTweenCompleted(tag)
     end
 end
 
-
 function onSectionHit()
     if curSection %2 == 0 and curStep < 112 then
         doTweenAlpha('sechid','camGame',1,1.33,'quadIn')
@@ -210,7 +210,7 @@ function onStartCountdown()
 end
 
 function onUpdatePost(el)
-	if lockcam then
-		setProperty('camZooming', false)
-	end
+    if lockcam then
+        setProperty('camZooming', false)
+    end
 end

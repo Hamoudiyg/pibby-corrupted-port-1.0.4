@@ -1,13 +1,35 @@
 function onCreatePost()
+    -- Shader3: old film
     makeLuaSprite("Shader3")
     setSpriteShader("Shader3", "old film")
 
-    runHaxeCode([[
-    trace(ShaderFilter);
-    game.camGame.setFilters([new ShaderFilter(game.getLuaObject("Shader3").shader)]);
-	]])
-end
+    -- Shader1: Glitchy (يُستخدم لاحقاً)
+    makeLuaSprite("Shader1")
+    setSpriteShader("Shader1", "Glitchy")
 
+    -- Shader2: shift glitch (يُستخدم لاحقاً)
+    makeLuaSprite("Shader2")
+    setSpriteShader("Shader2", "shift glitch")
+
+    runHaxeCode([[
+        var shaderName3 = "old film";
+        game.initLuaShader(shaderName3);
+        var shader3 = game.createRuntimeShader(shaderName3);
+        game.getLuaObject("Shader3").shader = shader3;
+
+        var shaderName1 = "Glitchy";
+        game.initLuaShader(shaderName1);
+        var shader1 = game.createRuntimeShader(shaderName1);
+        game.getLuaObject("Shader1").shader = shader1;
+
+        var shaderName2 = "shift glitch";
+        game.initLuaShader(shaderName2);
+        var shader2 = game.createRuntimeShader(shaderName2);
+        game.getLuaObject("Shader2").shader = shader2;
+
+        game.camGame.setFilters([new openfl.filters.ShaderFilter(shader3)]);
+    ]])
+end
 
 function onUpdatePost()
     if curStep > 1 and curStep < 158 then
@@ -16,8 +38,10 @@ function onUpdatePost()
 
     if curStep == 170 then
         runHaxeCode([[
-        trace(ShaderFilter);
-        game.camGame.setFilters([new ShaderFilter(game.getLuaObject("Shader1").shader),new ShaderFilter(game.getLuaObject("Shader2").shader)]);
-		]])
+            game.camGame.setFilters([
+                new openfl.filters.ShaderFilter(game.getLuaObject("Shader1").shader),
+                new openfl.filters.ShaderFilter(game.getLuaObject("Shader2").shader)
+            ]);
+        ]])
     end
 end

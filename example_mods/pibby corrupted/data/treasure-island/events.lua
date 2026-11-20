@@ -13,13 +13,13 @@ function onCreatePost()
     setProperty('markanim.x',getProperty('dad.x') - 520)
     setProperty('markanim.y',getProperty('dad.y') - 330)
 
-makeLuaSprite('flashbla', '', -2, -2);
-makeGraphic('flashbla',screenWidth+4,screenHeight+4,'ffffff')
-addLuaSprite('flashbla', true);
-setBlendMode('flashbla', 'SUBTRACT')
-setObjectCamera('flashbla', 'other')
+    makeLuaSprite('flashbla', '', -2, -2);
+    makeGraphic('flashbla',screenWidth+4,screenHeight+4,'ffffff')
+    addLuaSprite('flashbla', true);
+    setBlendMode('flashbla', 'SUBTRACT')
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('flashbla.camera', instanceArg('camOther'), false, true)
 end
-
 
 local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'timeBar', 'timeBarBG', 'timeTxt'}
 function onEvent(n,v1,v2)
@@ -46,11 +46,9 @@ function onEvent(n,v1,v2)
             triggerEvent('hud','1')
             else
             triggerEvent('hud',0)
-
         end
     end
 end
-
 
 folowcam = true
 camX = 1650
@@ -77,7 +75,6 @@ function onStepHit()
         setProperty('gf.alpha', 1)
     elseif curStep == 438 then
         beat = 0
-
     elseif curStep == 576 then
         setProperty('gf.visible',false)
     elseif curStep == 696 then
@@ -144,6 +141,4 @@ function onBeatHit()
         doTweenAngle('ang1','camGame',0,1,'expoOut')
         doTweenAngle('ang2','camHUD',0,1,'expoOut')
     end
-
-
 end

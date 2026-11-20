@@ -20,12 +20,10 @@ function onCreatePost()
     setProperty('stevanim.visible',false)
 end
 
-
 function onSongStart()
     doTweenAlpha('1', 'camGame',1,1.5,'sineInOut')
     doTweenAlpha('2', 'camHUD',1,1.5,'sineInOut')
 end
-
 
 function onEvent(n,v1,v2)
     if n == 'camera_target' then
@@ -37,7 +35,6 @@ function onEvent(n,v1,v2)
             folowcam = false
         end
     end
-
 
     if n == 'hud' then
         for i = 1,#hideHud do
@@ -59,8 +56,6 @@ function onEvent(n,v1,v2)
     end
 end
 
-
-
 folowcam = false
 camX = 500
 camY = 400
@@ -71,8 +66,6 @@ function onUpdate()
     end
 end
 
-
-
 function onStepHit()
     if curStep == 248 then
         playAnim('stevanim','dialogue',true)
@@ -82,46 +75,37 @@ function onStepHit()
         removeLuaSprite('stevanim',true)
         setProperty('dad.visible',true)
     elseif curStep == 592 then
-
         doTweenAlpha('2', 'camHUD',0,1,'expoOut')
         invertNote = 1
         folowcam = true
         camX = -180
         camY = 400
-
     elseif curStep == 608 then
         setProperty('camHUD.alpha',1)
-
     elseif curStep == 672 then
         folowcam = true
         camX = -180
         camY = 400
-
     elseif curStep == 738 then
         folowcam = true
         camX = -200
         camY = 100
-
     elseif curStep == 864 then
         setProperty('gf.visible', true)
         setProperty('camGame.alpha', 1)
         setProperty('camHUD.alpha', 1)
         setProperty('dad.y', defaultOpponentY + 310)
-
     elseif curStep == 993 then
         setProperty('boyfriend.visible', false)
         setProperty('pibby.visible', false)
-
     elseif curStep == 994 then
         folowcam = true
         camX = -200
         camY = 300
-
     elseif curStep == 1088 then
         setProperty('boyfriend.visible', true)
         setProperty('pibby.visible', true)
         setProperty('camHUD.alpha', 1)
-
     elseif curStep == 1208 then
         for i = 1,#hideHud do
             doTweenAlpha(hideHud[i], hideHud[i], 0, 0.3,'expoOut')
@@ -135,15 +119,11 @@ function onStepHit()
     elseif curStep == 1280 then
         doTweenAlpha('oddbe', 'dad', 1, 0.5,'expoOut')
         invertNote = 3
-
     elseif curStep == 1344 then
         doTweenAlpha('d', 'camGame', 0, 2,'sineInOut')
         doTweenAlpha('df', 'camHUD', 0, 2,'sineInOut')
-
     end
 end
-
-
 
 invertNote = 0
 color = {'red','green','blue'}
@@ -153,11 +133,11 @@ function opponentNoteHit(id, direction, noteType)
             if invertNote == 1 or invertNote == 3 then
                 setProperty('dad.colorTransform.'..color[i]..'Offset', 255)
                 setProperty('dad.colorTransform.'..color[i]..'Multiplier', -1)
-            runTimer('removeInv', 0.1)
+                runTimer('removeInv', 0.1)
             elseif invertNote == 2 or invertNote == 3 then
                 setProperty('gf.colorTransform.'..color[i]..'Offset', 255)
                 setProperty('gf.colorTransform.'..color[i]..'Multiplier', -1)
-            runTimer('removeInv2', 0.1)
+                runTimer('removeInv2', 0.1)
             end
         end
     end
@@ -165,11 +145,18 @@ end
 
 function onTimerCompleted(t)
     if t == 'removeInv' then
-        setProperty("dad.colorTransform", nil)
+        -- تحديث 1.0.4: إعادة تعيين القيم الفردية بدلاً من nil
+        for _, col in ipairs({'red', 'green', 'blue'}) do
+            setProperty('dad.colorTransform.' .. col .. 'Offset', 0)
+            setProperty('dad.colorTransform.' .. col .. 'Multiplier', 1)
+        end
         setProperty("dad.alpha", 0)
         setProperty("dad.alpha", 1)
     elseif t == 'removeInv2' then
-        setProperty("gf.colorTransform", nil)
+        for _, col in ipairs({'red', 'green', 'blue'}) do
+            setProperty('gf.colorTransform.' .. col .. 'Offset', 0)
+            setProperty('gf.colorTransform.' .. col .. 'Multiplier', 1)
+        end
         setProperty("gf.alpha", 0)
         setProperty("gf.alpha", 1)
     end
