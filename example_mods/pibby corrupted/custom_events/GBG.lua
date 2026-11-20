@@ -16,12 +16,9 @@ function onCreatePost()
     setProperty('GBG.visible', false)
 end
 
-
-
 function rgbToHex(array)
     return (array[1] * 65536) + (array[2] * 256) + array[3]
 end--ne_eo IS THE GOAT
-
 
 local chr = {'dad', 'boyfriend', 'gf'}
 local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'timeBar', 'timeBarBG', 'timeTxt'}
@@ -38,25 +35,24 @@ function onEvent(n,v1)
             end
 
         elseif v1 == 'off' then
-
             setProperty('GBG.visible', false)
             for i = 1,#hideHud do
                 setProperty(hideHud[i]..'.visible', true)
             end
-
             for i = 1,#chr do
                 resetColor(chr[i])
             end
-
-
         end
     end
 end
 
-
 function resetColor(spr)
-setProperty(spr..".colorTransform", nil)
-local oa = getProperty(spr..".alpha")
-setProperty(spr..".alpha", 0)
-setProperty(spr..".alpha", oa)
+    -- تحديث 1.0.4: إعادة تعيين القيم الفردية بدلاً من nil
+    for _, col in ipairs({'red', 'green', 'blue'}) do
+        setProperty(spr .. ".colorTransform." .. col .. "Offset", 0)
+        setProperty(spr .. ".colorTransform." .. col .. "Multiplier", 1)
+    end
+    local oa = getProperty(spr..".alpha")
+    setProperty(spr..".alpha", 0)
+    setProperty(spr..".alpha", oa)
 end-- again,ne_eo is the GOAT

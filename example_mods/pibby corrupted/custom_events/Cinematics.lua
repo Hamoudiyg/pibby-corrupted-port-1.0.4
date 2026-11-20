@@ -1,4 +1,3 @@
-
 local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'timeBar', 'timeBarBG', 'timeTxt'}
 local tagbar = {'UpperBar', 'LowerBar'}
 function onCreate()
@@ -8,19 +7,17 @@ function onCreate()
 
     for i = 1,2 do
         makeGraphic(tagbar[i], screenWidth * 1.12, screenHeight, '000000')
-        setObjectCamera(tagbar[i], 'hud')
+        -- تحديث 1.0.4: setObjectCamera -> setProperty
+        setProperty(tagbar[i]..'.camera', instanceArg('camHUD'), false, true)
         addLuaSprite(tagbar[i])
     end
 end
-
 
 function onCreatePost()
     NOY = getPropertyFromGroup('strumLineNotes', 0, 'y')
     UOY = getProperty('UpperBar.y')
     LOY = getProperty('LowerBar.y')
-    
 end
-
 
 function onEvent(name, value1, value2)
 	if name == 'Cinematics' then
@@ -34,14 +31,12 @@ function onEvent(name, value1, value2)
                 else
                     noteTweenY('NoteMove'..i,i, NOY + value2 - 40, value1, 'sineInOut')
                 end
-
             else
                 noteTweenY('NoteMove'..i,i, NOY, value1, 'sineInOut')
             end
          end
 
         for i = 1,#hideHud do
-
             if tonumber(value2) ~= 0 then
                 doTweenAlpha('HudAlpha'..i, hideHud[i], 0, value1 / 2, 'sineInOut')
             else

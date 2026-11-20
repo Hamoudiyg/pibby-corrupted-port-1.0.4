@@ -2,9 +2,7 @@ dir = 'backgrounds/williebg/Wille_BG_'
 function onCreate()
 --------------non animated shit---------------
 makeLuaSprite("bg1",dir..'1',0, 0)
-
 makeLuaSprite("bg6",dir..'6',0, 0)
-
 makeLuaSprite("bg9",dir..'9',1820, 1390)
 
 ----------------animated shit-----------------
@@ -30,21 +28,20 @@ addAnimationByPrefix('bg8','Idle', 'flag', 24, true);
 makeAnimatedLuaSprite('bg10', dir..'10', 2600, 1470);
 addAnimationByPrefix('bg10','Idle', 'fish', 24, true);
 
-
 for i = 1,10 do--scaling the objects to be a bit bigger
-scaleObject('bg'..i, 1.2, 1.2)
-addLuaSprite("bg"..i);
+    scaleObject('bg'..i, 1.2, 1.2)
+    addLuaSprite("bg"..i);
 end
 end
-
-
 
 function onCreatePost()
-makeLuaSprite("vig",'vig',0, 0)
-setObjectCamera('vig', 'other')
-setProperty('vig.alpha', 0.3)
-setObjectOrder('vig',30)
-addLuaSprite("vig");
+    makeLuaSprite("vig",'vig',0, 0)
+    -- تحديث 1.0.4: setObjectCamera -> setProperty
+    setProperty('vig.camera', instanceArg('camOther'), false, true)
+    setProperty('vig.alpha', 0.3)
+    -- تحديث 1.0.4: setObjectOrder -> zIndex
+    setProperty('vig.zIndex', 30)
+    addLuaSprite("vig");
 
     doTweenAlpha('VigTweenOut', 'vig', 0.1, 0.1)--start Vignette fade in n out stuff
     doTweenY('moveUp', 'bg6', 50, 1, 'sineInOut')--start boat to move up and down

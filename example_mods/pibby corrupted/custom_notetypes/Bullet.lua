@@ -8,10 +8,9 @@ function onCreate()
 	end
 
     for i = 1,4 do
-
         makeAnimatedLuaSprite('splash'..i, 'bullet_splashes')
-
-        setObjectCamera('splash'..i, 'hud')
+        -- تحديث 1.0.4: setObjectCamera -> setProperty
+        setProperty('splash'..i..'.camera', instanceArg('camHUD'), false, true)
         setProperty('splash'..i..'.visible', false)
         scaleObject('splash'..i,0.8,0.8)
         addLuaSprite('splash'..i, true)
@@ -20,7 +19,6 @@ function onCreate()
     addAnimationByPrefix('splash2', 'play', 'note splash blue ', 24, false)
     addAnimationByPrefix('splash3', 'play', 'note splash green ', 24, false)
     addAnimationByPrefix('splash4', 'play', 'note splash red ', 24, false)
-
 end
 
 function onCreatePost()
@@ -29,11 +27,10 @@ function onCreatePost()
     end
 end
 
-
 function onUpdatePost()
     for iS = 1,4 do
-    setProperty('splash'..iS..'.x', getPropertyFromGroup('playerStrums', iS - 1, 'x') - 120)
-    setProperty('splash'..iS..'.y', getPropertyFromGroup('playerStrums', iS - 1, 'y') - 100)
+        setProperty('splash'..iS..'.x', getPropertyFromGroup('playerStrums', iS - 1, 'x') - 120)
+        setProperty('splash'..iS..'.y', getPropertyFromGroup('playerStrums', iS - 1, 'y') - 100)
     end
 end
 
@@ -53,16 +50,12 @@ end
 function onTimerCompleted (tag)
     if tag == 'splashhide4' then
         setProperty('splash4.visible', false)
-
     elseif tag == 'splashhide3' then
         setProperty('splash3.visible', false)
-
     elseif tag == 'splashhide2' then
         setProperty('splash2.visible', false)
-
     elseif tag == 'splashhide1' then
         setProperty('splash1.visible', false)
-
     end
 end
 

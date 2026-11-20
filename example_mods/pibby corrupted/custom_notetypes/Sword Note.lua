@@ -8,30 +8,26 @@ function onCreate()
         end
     end
 
-
     makeAnimatedLuaSprite('finn_attack', 'special_Anims/slash')
     addAnimationByPrefix('finn_attack', 'attack', 'Finn Slash',24,false)
     scaleObject('finn_attack', 0.9, 0.9)
     addLuaSprite('finn_attack')
     setProperty('finn_attack.offset.x', 80)
     setProperty('finn_attack.offset.y', 144)
-
 end
-
 
 function onCreatePost()--new finn assets for the attack anim only, to replace it with the actual finn
     setProperty('finn_attack.visible', false)
 
     setProperty('finn_attack.x', getProperty((dadName == 'AT/finn' and 'dad' or gfName == 'AT/finn' and 'gf')..'.x'))
- 
     setProperty('finn_attack.y', getProperty((dadName == 'AT/finn' and 'dad' or gfName == 'AT/finn' and 'gf')..'.y'))
 
-    setObjectOrder('gfGroup', 11)
-    setObjectOrder('boyfriendGroup', 12)
-    setObjectOrder('finn_attack', 13)
-    setObjectOrder('dadGroup', 14)
+    -- تحديث 1.0.4: setObjectOrder -> zIndex
+    setProperty('gfGroup.zIndex', 11)
+    setProperty('boyfriendGroup.zIndex', 12)
+    setProperty('finn_attack.zIndex', 13)
+    setProperty('dadGroup.zIndex', 14)
 end
-
 
 function goodNoteHit(id, direction, noteType)
     if noteType == 'Sword Note' then
@@ -47,26 +43,26 @@ function goodNoteHit(id, direction, noteType)
     end
 end
 
-
 function onEvent(n,v1,v2)
     if n == 'GBG' then
         if v1 == 'on' then
             setProperty('finn_attack.colorTransform.color', 0xffffff)
-
-    elseif v1 == 'off' then
-        resetColor('finn_attack')
-
+        elseif v1 == 'off' then
+            resetColor('finn_attack')
         end
     end
 end
 
 function resetColor(spr)
-setProperty(spr..".colorTransform", nil)
-local oa = getProperty(spr..".alpha")
-setProperty(spr..".alpha", 0)
-setProperty(spr..".alpha", oa)
+    -- تحديث 1.0.4: إعادة تعيين القيم الفردية بدلاً من nil
+    for _, col in ipairs({'red', 'green', 'blue'}) do
+        setProperty(spr .. ".colorTransform." .. col .. "Offset", 0)
+        setProperty(spr .. ".colorTransform." .. col .. "Multiplier", 1)
+    end
+    local oa = getProperty(spr..".alpha")
+    setProperty(spr..".alpha", 0)
+    setProperty(spr..".alpha", oa)
 end-- again,ne_eo is the GOAT
-
 
 function noteMiss(id, direction, noteType)-- the same one above but now you get damage lol
     if noteType == 'Sword Note' then
@@ -83,7 +79,6 @@ function noteMiss(id, direction, noteType)-- the same one above but now you get 
         setProperty('health', getProperty('health') - 0.3)
     end
 end
-
 
 function onTimerCompleted(t)
     if t == 'endanim' then
