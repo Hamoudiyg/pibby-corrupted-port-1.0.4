@@ -16,7 +16,7 @@ class StorageUtil
 	private static final rootDir:String = LimeSystem.applicationStorageDirectory;
 	private static final publicFolderName:String = '.PlusEngine';
 	private static final legacyPublicFolderName:String = 'PlusEngine';
-	private static final androidPackageName:String = 'com.leninasto.plusengine';
+	private static final androidPackageName:String = 'com.Hamoudiyg.pibby_corrupted';
 	#if android
 	private static var cachedStorageType:String = null;
 	private static var cachedInternalDirectory:String = null;
