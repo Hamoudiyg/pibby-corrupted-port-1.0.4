@@ -48,8 +48,53 @@ class PsychJNI #if (lime >= "8.0.0") implements JNISafety #end
 	public static inline function setActivityTitle(title:String):Dynamic
 		return setActivityTitle_jni(title);
 
-	public static inline function setLauncherPrefs(showLauncher:Bool, autoStart:Bool):Dynamic
-		return setLauncherPrefs_jni(showLauncher, autoStart);
+	public static function setLauncherPrefs(showLauncher:Bool, autoStart:Bool):Dynamic
+	{
+		var fn:Dynamic = getSetLauncherPrefsJNI();
+		if (fn != null)
+		{
+			try
+			{
+				return fn(showLauncher, autoStart);
+			}
+			catch (e:Dynamic)
+			{
+				trace('setLauncherPrefs JNI call failed: $e');
+			}
+		}
+		return null;
+	}
+
+	private static var _setLauncherPrefsResolved:Bool = false;
+	private static var _setLauncherPrefsJNI:Dynamic = null;
+
+	private static function getSetLauncherPrefsJNI():Dynamic
+	{
+		if (_setLauncherPrefsResolved)
+			return _setLauncherPrefsJNI;
+
+		_setLauncherPrefsResolved = true;
+		var candidates:Array<String> = [
+			'com/Hamoudiyg/pibby_corrupted/EngineAndroidBridge',
+			'com/leninasto/plusengine/EngineAndroidBridge'
+		];
+
+		for (classPath in candidates)
+		{
+			try
+			{
+				var method:Dynamic = JNI.createStaticMethod(classPath, 'setLauncherPrefs', '(ZZ)V');
+				if (method != null)
+				{
+					_setLauncherPrefsJNI = method;
+					break;
+				}
+			}
+			catch (_:Dynamic) {}
+		}
+
+		return _setLauncherPrefsJNI;
+	}
 
 	@:noCompletion private static var setOrientation_jni:Dynamic = JNI.createStaticMethod('org/libsdl/app/SDLActivity', 'setOrientation',
 		'(IIZLjava/lang/String;)V');
@@ -63,7 +108,5 @@ class PsychJNI #if (lime >= "8.0.0") implements JNISafety #end
 	@:noCompletion private static var manualBackButton_jni:Dynamic = JNI.createStaticMethod('org/libsdl/app/SDLActivity', 'manualBackButton', '()V');
 	@:noCompletion private static var setActivityTitle_jni:Dynamic = JNI.createStaticMethod('org/libsdl/app/SDLActivity', 'setActivityTitle',
 		'(Ljava/lang/String;)Z');
-	@:noCompletion private static var setLauncherPrefs_jni:Dynamic = JNI.createStaticMethod('com/leninasto/plusengine/EngineAndroidBridge',
-		'setLauncherPrefs', '(ZZ)V');
 }
 #end

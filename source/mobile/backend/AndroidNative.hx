@@ -8,20 +8,57 @@ import lime.system.JNI;
 
 class AndroidNative
 {
+	#if android
+	private static var _showAlertResolved:Bool = false;
+	private static var _showAlertJNI:Dynamic = null;
+
+	private static function getShowAlertJNI():Dynamic
+	{
+		if (_showAlertResolved)
+			return _showAlertJNI;
+
+		_showAlertResolved = true;
+		var candidates:Array<String> = [
+			'com/Hamoudiyg/pibby_corrupted/EngineAndroidBridge',
+			'com/leninasto/plusengine/EngineAndroidBridge'
+		];
+
+		for (classPath in candidates)
+		{
+			try
+			{
+				var method:Dynamic = JNI.createStaticMethod(classPath, 'showAlert',
+					'(Ljava/lang/String;Ljava/lang/String;)Z', false, true);
+				if (method != null)
+				{
+					_showAlertJNI = method;
+					break;
+				}
+			}
+			catch (_:Dynamic) {}
+		}
+
+		return _showAlertJNI;
+	}
+	#end
+
 	public static function showAlert(title:String, message:String):Bool
 	{
 		#if android
-		try
+		var fn:Dynamic = getShowAlertJNI();
+		if (fn != null)
 		{
-			// The bridge always marshals this call to Android's UI thread. Sending it
-			// through ThreadUtil could leave the dialog queued behind unrelated work
-			// and reported success even when that worker later failed.
-			return JNI.createStaticMethod('com/leninasto/plusengine/EngineAndroidBridge', 'showAlert',
-				'(Ljava/lang/String;Ljava/lang/String;)Z', false, true)(title, message);
-		}
-		catch(e:Dynamic)
-		{
-			trace('Android alert dispatch failed: $e');
+			try
+			{
+				// The bridge always marshals this call to Android's UI thread. Sending it
+				// through ThreadUtil could leave the dialog queued behind unrelated work
+				// and reported success even when that worker later failed.
+				return fn(title, message);
+			}
+			catch(e:Dynamic)
+			{
+				trace('Android alert dispatch failed: $e');
+			}
 		}
 		#end
 		return false;
