@@ -16,14 +16,11 @@ vec4 ChromaticAbberation(sampler2D tex, in vec2 uv)
     float gChannel = flixel_texture2D(tex, PincushionDistortion(uv, 0.15 * amount)).g;
     float bChannel = flixel_texture2D(tex, PincushionDistortion(uv, 0.075 * amount)).b;
     float aChannel = flixel_texture2D(tex, PincushionDistortion(uv, 0.15 * amount)).a;
-    vec4 retColor = vec4(rChannel, gChannel, bChannel, aChannel);
-    return retColor;
+    return vec4(rChannel, gChannel, bChannel, aChannel);
 }
 
 void main()
 {
     vec2 uv = openfl_TextureCoordv;
-    vec4 col = ChromaticAbberation(bitmap, uv);
-
-    gl_FragColor = col;
+    gl_FragColor = ChromaticAbberation(bitmap, uv);
 }

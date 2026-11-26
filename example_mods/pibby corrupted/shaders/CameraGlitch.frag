@@ -33,8 +33,7 @@ vec4 getVideo(vec2 uv)
                                               (0.5 + 0.1 * sin(iTime * 200.0) * cos(iTime)));
         look.y = mod(look.y + vShift * glitchModifier, 0.4);
     }
-    vec4 video = flixel_texture2D(bitmap, look);
-    return video;
+    return flixel_texture2D(bitmap, look);
 }
 
 vec2 screenDistort(vec2 uv)
@@ -74,12 +73,14 @@ float noise(vec2 uv)
 
 vec2 scandistort(vec2 uv)
 {
+    if (!scanlinesOn)
+        return uv;
+
     float scan1 = clamp(cos(uv.y * 2.0 + iTime), 0.0, 1.0);
     float scan2 = clamp(cos(uv.y * 2.0 + iTime + 4.0) * 10.0, 0.0, 1.0);
     float amount = scan1 * scan2 * uv.x;
 
     uv.x -= 0.05 * mix(flixel_texture2D(noiseTex, vec2(uv.x, amount)).r * amount, amount, 0.9);
-
     return uv;
 }
 
@@ -87,6 +88,13 @@ void main()
 {
     vec2 uv = openfl_TextureCoordv;
     vec2 curUV = screenDistort(uv);
+
+    if (curUV.x < 0.0 || curUV.x > 1.0 || curUV.y < 0.0 || curUV.y > 1.0)
+    {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+        return;
+    }
+
     uv = scandistort(curUV);
     vec4 video = getVideo(uv);
     float vigAmt = 1.0;
@@ -96,23 +104,19 @@ void main()
     video.g = getVideo(vec2(x + uv.x + 0.000, uv.y - 0.002)).y + 0.05;
     video.b = getVideo(vec2(x + uv.x - 0.002, uv.y + 0.000)).z + 0.05;
     video.r += 0.08 * getVideo(0.75 * vec2(x + 0.025, -0.027) + vec2(uv.x + 0.001, uv.y + 0.001)).x;
-    video.g += 0.05 * getVideo(0.75 * vec2(x + -0.022, -0.02) + vec2(uv.x + 0.000, uv.y - 0.002)).y;
-    video.b += 0.08 * getVideo(0.75 * vec2(x + -0.02, -0.018) + vec2(uv.x - 0.002, uv.y + 0.000)).z;
+    video.g += 0.05 * getVideo(0.75 * vec2(x - 0.022, -0.020) + vec2(uv.x + 0.000, uv.y - 0.002)).y;
+    video.b += 0.08 * getVideo(0.75 * vec2(x - 0.020, -0.018) + vec2(uv.x - 0.002, uv.y + 0.000)).z;
 
-    video = clamp(video * 0.6 + 0.4 * video * video * 1.0, 0.0, 1.0);
+    video = clamp(video * 0.6 + 0.4 * video * video, 0.0, 1.0);
     if (vignetteMoving)
         vigAmt = 3.0 + 0.3 * sin(iTime + 5.0 * cos(iTime * 5.0));
 
     float vignette = (1.0 - vigAmt * (uv.y - 0.5) * (uv.y - 0.5)) * (1.0 - vigAmt * (uv.x - 0.5) * (uv.x - 0.5));
 
     if (vignetteOn)
-        video *= vignette;
+        video.rgb *= vignette;
 
-    gl_FragColor = mix(video, vec4(noise(uv * 75.0)), 0.05);
-    gl_FragColor.a = flixel_texture2D(bitmap, curUV).a;
-
-    if (curUV.x < 0.0 || curUV.x > 1.0 || curUV.y < 0.0 || curUV.y > 1.0)
-    {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
-    }
+    vec4 finalCol = mix(video, vec4(noise(uv * 75.0)), 0.05);
+    finalCol.a = flixel_texture2D(bitmap, curUV).a;
+    gl_FragColor = finalCol;
 }

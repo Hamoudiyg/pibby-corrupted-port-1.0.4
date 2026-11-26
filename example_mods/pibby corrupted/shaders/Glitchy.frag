@@ -1,11 +1,7 @@
 #pragma header
-uniform float iTime;
-#define iChannel0 bitmap
-#define texture flixel_texture2D
-#define fragColor gl_FragColor
-#define mainImage main
 
-uniform float AMT; // 0 - 1 glitch amount
+uniform float iTime;
+uniform float AMT;   // 0 - 1 glitch amount
 uniform float SPEED; // 0 - 1 speed
 
 float random2d(vec2 n)
@@ -18,7 +14,6 @@ float randomRange(in vec2 seed, in float minVal, in float maxVal)
     return minVal + random2d(seed) * (maxVal - minVal);
 }
 
-// return 1 if v inside 1d range
 float insideRange(float v, float bottom, float top)
 {
     return step(bottom, v) - step(top, v);
@@ -26,47 +21,49 @@ float insideRange(float v, float bottom, float top)
 
 void main()
 {
-    vec2 fragCoord = openfl_TextureCoordv * openfl_TextureSize;
-    vec2 iResolution = openfl_TextureSize;
-
+    vec2 uv = openfl_TextureCoordv;
     float time = floor(iTime * SPEED * 60.0);
-    vec2 uv = fragCoord.xy / iResolution.xy;
 
-    // copy orig
-    vec3 outCol = texture(iChannel0, uv).rgb;
-
-    // randomly offset slices horizontally
+    vec3 outCol = flixel_texture2D(bitmap, uv).rgb;
     float maxOffset = AMT / 2.0;
-    for (float i = 0.0; i < 10.0 * AMT; i += 1.0)
+    float activeSlices = 10.0 * AMT;
+
+    for (int i = 0; i < 10; i++)
     {
-        float sliceY = random2d(vec2(time, 2345.0 + float(i)));
-        float sliceH = random2d(vec2(time, 9035.0 + float(i))) * 0.25;
-        float hOffset = randomRange(vec2(time, 9625.0 + float(i)), -maxOffset, maxOffset);
-        vec2 uvOff = uv;
-        uvOff.x += hOffset;
-        if (insideRange(uv.y, sliceY, fract(sliceY + sliceH)) == 1.0)
+        if (float(i) < activeSlices)
         {
-            outCol = texture(iChannel0, uvOff).rgb;
+            float fi = float(i);
+            float sliceY = random2d(vec2(time, 2345.0 + fi));
+            float sliceH = random2d(vec2(time, 9035.0 + fi)) * 0.25;
+            float hOffset = randomRange(vec2(time, 9625.0 + fi), -maxOffset, maxOffset);
+            vec2 uvOff = uv;
+            uvOff.x = fract(uvOff.x + hOffset);
+            if (insideRange(uv.y, sliceY, fract(sliceY + sliceH)) == 1.0)
+            {
+                outCol = flixel_texture2D(bitmap, uvOff).rgb;
+            }
         }
     }
 
-    // do slight offset on one entire channel
     float maxColOffset = AMT / 6.0;
     float rnd = random2d(vec2(time, 9545.0));
-    vec2 colOffset = vec2(randomRange(vec2(time, 9545.0), -maxColOffset, maxColOffset),
-                          randomRange(vec2(time, 7205.0), -maxColOffset, maxColOffset));
+    vec2 colOffset = vec2(
+        randomRange(vec2(time, 9545.0), -maxColOffset, maxColOffset),
+        randomRange(vec2(time, 7205.0), -maxColOffset, maxColOffset)
+    );
+
     if (rnd < 0.33)
     {
-        outCol.r = texture(iChannel0, uv + colOffset).r;
+        outCol.r = flixel_texture2D(bitmap, uv + colOffset).r;
     }
     else if (rnd < 0.66)
     {
-        outCol.g = texture(iChannel0, uv + colOffset).g;
+        outCol.g = flixel_texture2D(bitmap, uv + colOffset).g;
     }
     else
     {
-        outCol.b = texture(iChannel0, uv + colOffset).b;
+        outCol.b = flixel_texture2D(bitmap, uv + colOffset).b;
     }
 
-    fragColor = vec4(outCol, flixel_texture2D(iChannel0, uv).a);
+    gl_FragColor = vec4(outCol, flixel_texture2D(bitmap, uv).a);
 }
