@@ -1,19 +1,24 @@
 #pragma header
-
 uniform float iTime;
-uniform int invert; // 0 = original color, 1 = inverted color
+#define iChannel0 bitmap
+#define texture flixel_texture2D
+#define fragColor gl_FragColor
+#define mainImage main
 
-void main()
+uniform int invert; // 0 means no original color 1 means invert
+void mainImage()
 {
-    vec2 uv = openfl_TextureCoordv;
-    vec4 tex = flixel_texture2D(bitmap, uv);
+    vec2 uv = openfl_TextureCoordv.xy;
 
+    vec2 fragCoord = openfl_TextureCoordv * openfl_TextureSize;
+    vec2 iResolution = openfl_TextureSize;
+    vec4 color = texture(iChannel0, fragCoord.xy / iResolution.xy);
     if (invert == 0)
     {
-        gl_FragColor = tex;
+        fragColor = color;
     }
     else
     {
-        gl_FragColor = vec4((vec3(tex.a) - tex.rgb), tex.a);
+        fragColor = vec4(flixel_texture2D(iChannel0, uv).a - color.rgb, flixel_texture2D(iChannel0, uv).a);
     }
 }

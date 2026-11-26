@@ -1,63 +1,85 @@
 #pragma header
-
 uniform float iTime;
+#define iChannel0 bitmap
+#define texture flixel_texture2D
+#define fragColor gl_FragColor
+#define mainImage main
 
-vec2 hash2(vec2 p)
+#define int2 ivec2
+#define float2 vec2
+#define int3 ivec3
+#define float3 vec3
+#define int4 ivec4
+#define float4 vec4
+#define frac fract
+#define float2x2 mat2
+#define float3x3 mat3
+#define float4x4 mat4
+#define saturate(x) clamp(x, 0.0, 1.0)
+#define lerp mix
+#define CurrentTime (iTime)
+#define sincos(x, s, c) s = sin(x), c = cos(x)
+#define mul(x, y) (x * y)
+#define atan2 atan
+#define fmod mod
+#define static
+
+float2 hash(float2 p)
 {
-    vec3 p3 = fract(vec3(p.xyx) * vec3(166.1031, 147.1030, 142.0973));
+    float3 p3 = frac(float3(p.xyx) * float3(166.1031, 147.1030, 142.0973));
     p3 += dot(p3, p3.yzx + 33.33);
-    return fract((p3.xx + p3.yz) * p3.zy);
+    return frac((p3.xx + p3.yz) * p3.zy);
 }
 
-float simplexNoise(vec2 uv)
+float simplexNoise(float2 uv)
 {
     const float k1 = 0.366025;
     const float k2 = 0.211324;
 
-    ivec2 idx = ivec2(floor(uv + (uv.x + uv.y) * k1));
-    vec2 a = uv - (vec2(idx) - float(idx.x + idx.y) * k2);
-    ivec2 tb = a.y > a.x ? ivec2(0, 1) : ivec2(1, 0);
-    vec2 b = a - vec2(tb) + k2;
-    vec2 c = a - 1.0 + k2 * 2.0;
+    int2 idx = int2(floor(uv + (uv.x + uv.y) * k1));
+    float2 a = uv - (float2(idx) - float(idx.x + idx.y) * k2);
+    int2 tb = a.y > a.x ? int2(0, 1) : int2(1, 0);
+    float2 b = a - float2(tb) + k2;
+    float2 c = a - 1.0 + k2 * 2.0;
 
-    vec3 kernel = max(0.5 - vec3(dot(a, a), dot(b, b), dot(c, c)), 0.0);
-    vec3 noiseVal = kernel * kernel * kernel * kernel *
-        vec3(
-            dot(a, hash2(vec2(idx)) * 2.0 - 1.0),
-            dot(b, hash2(vec2(idx + tb)) * 2.0 - 1.0),
-            dot(c, hash2(vec2(idx + ivec2(1, 1))) * 2.0 - 1.0)
-        );
+    float3 kernel = max(0.5 - float3(dot(a, a), dot(b, b), dot(c, c)), 0.0);
+    float3 noise = kernel * kernel * kernel * kernel *
+        float3(dot(a, hash(float2(idx)) * 2.0 - 1.0),
+               dot(b, hash(float2(idx + tb)) * 2.0 - 1.0),
+               dot(c, hash(float2(idx + int2(1, 1))) * 2.0 - 1.0));
 
-    return dot(vec3(70.0), noiseVal);
+    return dot(float3(70.0), noise);
 }
 
-float verticalLine(vec2 uv, float t)
+float verticalLine(float2 uv, float time)
 {
-    float uvX = uv.x + t * 0.0000003;
-    vec2 xHash = hash2(vec2(uvX, uvX));
+    float uvX = uv.x + time * 0.0000003;
+    float2 xHash = hash(float2(uvX, uvX));
     float vertical = step(0.9999996, sin(uvX * 1000.0 * (xHash.x * 0.01 + 0.01)));
 
-    float uvY = uv.y + t * 0.000001;
-    vec2 yHash = hash2(vec2(uvY, uvY));
-    vertical *= sin(uvY * 1000.0 * yHash.x);
+    float uvY = uv.y + time * 0.000001;
+    float2 yHash = hash(float2(uvY, uvY));
+    vertical *= sin(uvY * 1000.0 * (yHash.x));
 
-    return clamp(1.0 - vertical, 0.0, 1.0);
+    return saturate(1.0 - vertical);
 }
 
-void main()
+void mainImage()
 {
-    vec2 uv = openfl_TextureCoordv;
+    vec2 uv = openfl_TextureCoordv.xy;
+    vec2 fragCoord = openfl_TextureCoordv * openfl_TextureSize;
+    vec2 iResolution = openfl_TextureSize;
     float t = iTime;
 
-    float col = 0.0;
+    float3 col = float3(0.0, 0.0, 0.0);
     col += verticalLine(uv - 1.0, t) * 0.5;
     col += (1.0 - verticalLine(uv - 3.0, t * 5.0)) * 0.5;
-    col *= smoothstep(0.9, 0.83, simplexNoise((uv + hash2(vec2(t, t)) * 154.4541 - 154.4541) * 10.0));
-    col *= 1.0 - hash2(uv + t * 0.01).x * 0.25;
-    col *= smoothstep(1.5 + hash2(vec2(floor(t * 15.0))).x * 0.3, 0.0, length(uv - 0.5));
+    col *= smoothstep(0.9, 0.83, simplexNoise((uv + hash(float2(t, t)) * 154.4541 - 154.4541) * 10.0));
+    col *= 1.0 - hash(uv + t * 0.01).x * 0.25;
+    col *= smoothstep(1.5 + hash(floor(float2(t, t) * 15.0)).x * 0.3, 0.0, length(uv - 0.5));
 
-    vec4 tex = flixel_texture2D(bitmap, uv);
-    float gray = (tex.r + tex.g + tex.b) / 3.0;
+    float3 tex = texture(iChannel0, uv).rgb;
+    tex = float3((tex.r + tex.g + tex.b) / 3.0);
 
-    gl_FragColor = vec4(vec3(col * gray), tex.a);
+    fragColor = vec4(col * tex, flixel_texture2D(iChannel0, uv).a);
 }
