@@ -12,10 +12,10 @@ import mobile.backend.PsychJNI;
 @:structInit class SaveVariables
 {
 	// Mobile / touch
-	public var extraButtons:String = "NONE"; // mobile extra button option
+	public var extraButtons:String = "SINGLE"; // mobile extra button option
 	public var hitboxPos:Bool = true; // hitbox extra button position option
 	public var dynamicColors:Bool = true; // yes cause its cool -Karim
-	public var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
+	public var controlsAlpha:Float = FlxG.onMobile ? 0.5 : 0;
 	public var showTouchPointer:Bool = true; // show touch pointer indicator (like Android dev option)
 	public var showMobileDebugButtons:Bool = false; // show the trace button on mobile
 	public var mobileReceptorAlign:Bool = false; // Align receptors with hitbox lanes (mobile only, may break scripts)
@@ -183,19 +183,19 @@ import mobile.backend.PsychJNI;
 	public var discordRPC:Bool = true;
 	public var language:String = 'en-US';
 	public var dynamicCombo:Bool = false;
-	public var resultsStateAtEnd:Bool = true;
+	public var resultsStateAtEnd:Bool = false;
 	public var vanillaTransition:Bool = false; // Use vanilla Psych Engine transition instead of custom
 	public var optionsMenuStyle:String = 'Plus'; // Plus, Psych
 	public var pauseCountdown:Bool = false; // Enable countdown when resuming from pause
 	public var heyIntro:Bool = false; // Boyfriend and Girlfriend do Hey! animation on countdown Go!
 	public var breakTimer:Bool = false; // Show timer when next notes are approaching
-	public var usePsychFreeplay:Bool = true; // Use Psych-style legacy Freeplay instead of PlusEngine Freeplay
+	public var usePsychFreeplay:Bool = false; // Use Psych-style legacy Freeplay instead of PlusEngine Freeplay
 	public var cneStyleDragCharacter:Bool = false;
 	public var canDragCameraStage:Bool = true;
 
 	// Mod compatibility / security
 	public var scriptWarns:Bool = true; // Show warnings for deprecated Lua/HScript compatibility APIs
-	public var modSecure:Bool = true; // Scan mod Lua/HScript before allowing sensitive APIs to run
+	public var modSecure:Bool = false; // Scan mod Lua/HScript before allowing sensitive APIs to run
 	public var modSecurityChecks:Map<String, Bool> = new Map();
 }
 
