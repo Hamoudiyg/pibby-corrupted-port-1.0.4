@@ -13,6 +13,13 @@ local function rgbToHex(array)
     return (array[1] * 65536) + (array[2] * 256) + array[3]
 end
 
+local function resetColor(spr)
+    setProperty(spr .. '.colorTransform', nil)
+    local oa = getProperty(spr .. '.alpha')
+    setProperty(spr .. '.alpha', 0)
+    setProperty(spr .. '.alpha', oa)
+end
+
 local function applySlashColor()
     local target = getFinnSprite()
     if gbgActive then
@@ -38,12 +45,7 @@ local function runSlash(isMiss)
     setProperty(target .. '.visible', false)
     playSound('slice', 0.2)
 
-    if isMiss then
-        triggerEvent('Play Animation', 'hit', 'bf')
-    else
-        triggerEvent('Play Animation', 'dodge', 'bf')
-    end
-
+    triggerEvent('Play Animation', isMiss and 'hit' or 'dodge', 'bf')
     cancelTimer('endanim')
     runTimer('endanim', 0.48)
     triggerEvent('Screen Shake', '0.1,0.03', '0.1,0.03')
@@ -51,7 +53,9 @@ end
 
 function onCreate()
     precacheSound('slice')
-    for i = 0, getProperty('unspawnNotes.length') - 1 do
+
+    local noteCount = getProperty('unspawnNotes.length') - 1
+    for i = 0, noteCount do
         if getPropertyFromGroup('unspawnNotes', i, 'noteType') == 'Sword Note' then
             setPropertyFromGroup('unspawnNotes', i, 'texture', 'Sword')
             setPropertyFromGroup('unspawnNotes', i, 'noMissAnimation', true)
@@ -102,19 +106,9 @@ function onEvent(n, v1, v2)
     end
 end
 
-function resetColor(spr)
-    setProperty(spr .. '.colorTransform', nil)
-    local oa = getProperty(spr .. '.alpha')
-    setProperty(spr .. '.alpha', 0)
-    setProperty(spr .. '.alpha', oa)
-end
-
 function onTimerCompleted(t, loops, loopsLeft)
     if t == 'endanim' then
         setProperty('finn_attack.visible', false)
         setProperty(getFinnSprite() .. '.visible', true)
     end
 end
-```[cite: 7, 8]
-
-احفظ الملف بترميز **UTF-8** وجرّبه الآن في المقطع الثاني من **Corrupted Hero**، وأخبرني كيف أصبح مظهر الضربة[cite: 5, 7, 8].
