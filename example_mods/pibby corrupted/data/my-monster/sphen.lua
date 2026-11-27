@@ -12,8 +12,8 @@ local function getTargetStrumX(index, isIntro)
             local midPlayerX = {412, 524, 636, 748}
             return midPlayerX[localIdx + 1]
         else
-            -- مكان أسهم العدو في Middle Scroll بعيداً عن أسهم اللاعب
-            local midOppX = {92, 204, 1068, 1180}
+            -- مكان أسهم العدو في Middle Scroll بمسافة متطابقة (112) بين اليسار واليمين
+            local midOppX = {92, 204, 956, 1068}
             return midOppX[localIdx + 1]
         end
     else
