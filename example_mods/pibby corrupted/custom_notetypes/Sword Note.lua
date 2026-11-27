@@ -9,21 +9,19 @@ local function getFinnSprite()
     return 'dad'
 end
 
-local function rgbToHex(array)
-    return (array[1] * 65536) + (array[2] * 256) + array[3]
-end
-
 local function resetColor(spr)
-    setProperty(spr .. '.colorTransform', nil)
+    for _, col in ipairs({'red', 'green', 'blue'}) do
+        setProperty(spr .. '.colorTransform.' .. col .. 'Offset', 0)
+        setProperty(spr .. '.colorTransform.' .. col .. 'Multiplier', 1)
+    end
     local oa = getProperty(spr .. '.alpha')
     setProperty(spr .. '.alpha', 0)
     setProperty(spr .. '.alpha', oa)
 end
 
-local function applySlashColor()
-    local target = getFinnSprite()
+local function applySlashStyle()
     if gbgActive then
-        setProperty('finn_attack.colorTransform.color', rgbToHex(getProperty(target .. '.healthColorArray')))
+        setProperty('finn_attack.colorTransform.color', 0xFFFFFF)
     else
         resetColor('finn_attack')
     end
@@ -41,8 +39,8 @@ local function runSlash(isMiss)
 
     playAnim('finn_attack', 'attack', true)
     setProperty('finn_attack.visible', true)
-    applySlashColor()
     setProperty(target .. '.visible', false)
+    applySlashStyle()
     playSound('slice', 0.2)
 
     triggerEvent('Play Animation', isMiss and 'hit' or 'dodge', 'bf')
@@ -98,10 +96,10 @@ function onEvent(n, v1, v2)
     if n == 'GBG' then
         if v1 == 'on' then
             gbgActive = true
-            applySlashColor()
+            applySlashStyle()
         elseif v1 == 'off' then
             gbgActive = false
-            applySlashColor()
+            applySlashStyle()
         end
     end
 end
