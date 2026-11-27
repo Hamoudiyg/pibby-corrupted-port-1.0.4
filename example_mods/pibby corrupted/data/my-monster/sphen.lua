@@ -1,5 +1,66 @@
 local lockcam = false
+local folowcam = false
 local hideHud = {'iconP1', 'iconP2', 'scoreTxt', 'healthBar', 'healthBarBG', 'timeBar', 'timeBarBG', 'timeTxt','ground', 'sky', 'lion', 'goofyAhhDarkness', 'stevensword', 'clusterhand', 'moon', 'water', 'clouds'}
+
+local function getTargetStrumX(index, isIntro)
+    local isPlayer = index >= 4
+    local localIdx = isPlayer and (index - 4) or index
+
+    if middlescroll then
+        if isPlayer then
+            -- مكان أسهم اللاعب الصحيح في Middle Scroll
+            local midPlayerX = {412, 524, 636, 748}
+            return midPlayerX[localIdx + 1]
+        else
+            -- مكان أسهم العدو في Middle Scroll بعيداً عن أسهم اللاعب
+            local midOppX = {92, 204, 1068, 1180}
+            return midOppX[localIdx + 1]
+        end
+    else
+        if isIntro and isPlayer then
+            local introPlayerX = {412, 524, 636, 748}
+            return introPlayerX[localIdx + 1]
+        end
+
+        local defaultX = isPlayer and _G['defaultPlayerStrumX'..localIdx] or _G['defaultOpponentStrumX'..localIdx]
+        if defaultX ~= nil then
+            return defaultX
+        end
+
+        local fallbackPlayerX = {732, 844, 956, 1068}
+        local fallbackOppX = {92, 204, 316, 428}
+        return isPlayer and fallbackPlayerX[localIdx + 1] or fallbackOppX[localIdx + 1]
+    end
+end
+
+local function getTargetStrumY(index)
+    local isPlayer = index >= 4
+    local localIdx = isPlayer and (index - 4) or index
+    local defaultY = isPlayer and _G['defaultPlayerStrumY'..localIdx] or _G['defaultOpponentStrumY'..localIdx]
+
+    if defaultY ~= nil then
+        return defaultY
+    end
+
+    return downscroll and 570 or 50
+end
+
+local function applyStrumsImmediate(isIntro)
+    for i = 0, 7 do
+        setPropertyFromGroup('strumLineNotes', i, 'x', getTargetStrumX(i, isIntro))
+        setPropertyFromGroup('strumLineNotes', i, 'y', getTargetStrumY(i))
+    end
+end
+
+local function tweenStrumsToTarget(duration, easeType)
+    for i = 0, 7 do
+        local targetX = getTargetStrumX(i, false)
+        local targetY = getTargetStrumY(i)
+        noteTweenX('strumReturnX'..i, i, targetX, duration, easeType)
+        noteTweenY('strumReturnY'..i, i, targetY, duration, easeType)
+    end
+end
+
 function onCreate()
     addCharacterToList('SU/shield-steven', 'dad')
     makeLuaSprite('Vig', 'vig')
@@ -35,10 +96,7 @@ function onSongStart()
         noteTweenAlpha("yes"..i, i, 0, 0.01)
     end
 
-    setPropertyFromGroup('strumLineNotes', 4, 'x',412)
-    setPropertyFromGroup('strumLineNotes', 5, 'x',524)
-    setPropertyFromGroup('strumLineNotes', 6, 'x',636)
-    setPropertyFromGroup('strumLineNotes', 7, 'x',748)
+    applyStrumsImmediate(true)
 
     doTweenAlpha('sechid','camGame',1,1.33,'quadIn')
 end
@@ -155,10 +213,8 @@ function onStepHit()
             noteTweenAlpha("yes"..i, i, 1, 0.1)
         end
 
-        setPropertyFromGroup('strumLineNotes', 4, 'x',732)
-        setPropertyFromGroup('strumLineNotes', 5, 'x',844)
-        setPropertyFromGroup('strumLineNotes', 6, 'x',956)
-        setPropertyFromGroup('strumLineNotes', 7, 'x',1068)
+        -- تحريك سلس للأسهم إلى مكانها الصحيح في Middle Scroll و Downscroll دون تداخل
+        tweenStrumsToTarget(0.45, 'cubeOut')
 
         setProperty('cameraSpeed', 1.2)
         doTweenAlpha('alsndsankasfgsd', 'Vig', 0.2, 0.1);
